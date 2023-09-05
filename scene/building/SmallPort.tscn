@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cocsxam2vkg1e"]
 
-[ext_resource type="Script" path="res://scene/building/SmallPort.gd" id="1_tsnte"]
+[ext_resource type="Script" path="res://scene/Building/SmallPort.gd" id="1_tsnte"]
 [ext_resource type="Texture2D" uid="uid://bj7asipka28wy" path="res://ressources/Building/smallPort.png" id="2_vg5pd"]
 
 [node name="SmallPort" type="Sprite2D"]

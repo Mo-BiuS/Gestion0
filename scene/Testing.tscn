@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bd721p8qhbia8"]
+[gd_scene load_steps=32 format=3 uid="uid://bd721p8qhbia8"]
 
 [ext_resource type="Script" path="res://scene/Testing.gd" id="1_01lyx"]
 [ext_resource type="Texture2D" uid="uid://dd3m3ix5q66ck" path="res://ressources/UI/Borders.png" id="2_thc5l"]
@@ -16,7 +16,8 @@
 [ext_resource type="PackedScene" uid="uid://dayivtyfadp3t" path="res://scene/View/hud.tscn" id="10_pn6wm"]
 [ext_resource type="Texture2D" uid="uid://bxnjfmaebqai0" path="res://ressources/Terrain/heavyForest.png" id="11_4v2fm"]
 [ext_resource type="Script" path="res://scene/BuildingHandler.gd" id="13_e27mp"]
-[ext_resource type="PackedScene" uid="uid://cocsxam2vkg1e" path="res://scene/building/SmallPort.tscn" id="15_feff2"]
+[ext_resource type="PackedScene" uid="uid://h3lqtndyd3g2" path="res://scene/Villager/colonist.tscn" id="13_whk88"]
+[ext_resource type="PackedScene" uid="uid://cocsxam2vkg1e" path="res://scene/Building/SmallPort.tscn" id="15_feff2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jckeh"]
 texture = ExtResource("3_x7x36")
@@ -1429,6 +1430,19 @@ script = ExtResource("6_sxd17")
 
 [node name="SouthEast" type="Marker2D" parent="Terrain"]
 position = Vector2(1120, 672)
+
+[node name="VillagerHandler" type="Node2D" parent="."]
+
+[node name="VillagerList" type="Node2D" parent="VillagerHandler"]
+
+[node name="Colonist" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
+position = Vector2(616, 424)
+
+[node name="Colonist2" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
+position = Vector2(648, 440)
+
+[node name="Colonist3" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
+position = Vector2(592, 432)
 
 [node name="BuildingHandler" type="Node2D" parent="."]
 script = ExtResource("13_e27mp")
