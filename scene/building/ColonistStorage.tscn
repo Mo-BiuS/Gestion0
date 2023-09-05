@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://b3s1m5v6vjgxl"]
+
+[ext_resource type="Script" path="res://scene/building/ColonistStorage.gd" id="1_oi8h5"]
+[ext_resource type="Texture2D" uid="uid://bwlsak38adgvn" path="res://ressources/Building/woodStorage.png" id="2_lp561"]
+
+[node name="ColonistStorage" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("2_lp561")
+region_enabled = true
+region_rect = Rect2(0, 0, 32, 32)
+script = ExtResource("1_oi8h5")
