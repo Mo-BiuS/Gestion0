@@ -44,6 +44,7 @@ func _process(delta):
 			if(Input.is_action_just_pressed("cancel")):
 				hud.deselectBuilding()
 				cursor.stopPlacingRoad()
+				hud.showInfoBar(false)
 				state = State.IDLE
 				buildingId = -1
 			elif(Input.is_action_just_pressed("validate") && !inMenu):
@@ -73,6 +74,8 @@ func _on_hud_buidlding_selected(toogled, id):
 	if(toogled):
 		if(id == 0):
 			state = State.PLACING_ROAD_0
+			hud.setInfoBarToRoad()
+			hud.showInfoBar(true)
 		else:
 			buildingId = id
 			cursor.setBuilding(id)

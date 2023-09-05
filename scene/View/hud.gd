@@ -34,10 +34,16 @@ func deselectBuilding()->void:
 	colonistStorage.button_pressed = false
 	smallPort.button_pressed = false
 
-func showInfoBar(b:bool):
+func showInfoBar(b:bool)->void:
 	infoBar.visible = b
 
-func setBuildingInfo(b):
+func setInfoBarToRoad()->void:
+	setGoldCost(1)
+	setWoodCost(0)
+	setWorkCost(5)
+	setDescription("Simple road")
+
+func setBuildingInfo(b)->void:
 	setGoldCost(b.goldCost)
 	setWoodCost(b.woodCost)
 	setWorkCost(b.workCost)
