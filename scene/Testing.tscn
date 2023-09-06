@@ -1432,8 +1432,10 @@ script = ExtResource("6_sxd17")
 position = Vector2(1120, 672)
 
 [node name="VillagerHandler" type="Node2D" parent="."]
+y_sort_enabled = true
 
 [node name="VillagerList" type="Node2D" parent="VillagerHandler"]
+y_sort_enabled = true
 
 [node name="Colonist" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
 position = Vector2(616, 424)
@@ -1442,7 +1444,10 @@ position = Vector2(616, 424)
 position = Vector2(648, 440)
 
 [node name="Colonist3" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
-position = Vector2(592, 432)
+position = Vector2(664, 424)
+
+[node name="Colonist4" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
+position = Vector2(632, 440)
 
 [node name="BuildingHandler" type="Node2D" parent="."]
 script = ExtResource("13_e27mp")

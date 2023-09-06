@@ -21,6 +21,7 @@ func _process(delta):
 	var mousePos:Vector2i = get_local_mouse_position()
 	for i in hud.getMenuArea():
 		inMenu = inMenu || i.has_point(mousePos*2+(Vector2i(get_viewport_transform().origin)))
+	#print(inMenu)
 	
 	match state:
 		State.IDLE:pass

@@ -3,6 +3,7 @@ class_name BuildingHandler extends Node2D
 @onready var buildingList=$BuildingList
 @onready var buildingQueue=$BuildingQueue
 @onready var roadQueue=$RoadQueue
+@onready var terrain=$"../Terrain"
 
 const ROAD_COST = 1
 var roadToBuild:Array[Vector2i]
@@ -51,7 +52,7 @@ func addBuildingToQueue(buildingId, buildStat)->void:
 
 func addRoad(roadToAdd:Array[Vector2i], budget:int)->int:
 	for i in roadToAdd:
-		if budget >= ROAD_COST && !roadToBuild.has(i):
+		if budget >= ROAD_COST && !roadToBuild.has(i) && !terrain.get_cell_source_id(2,i) == 100 :
 			roadToBuild.push_back(i)
 			budget-=ROAD_COST
 	refreshRoad()

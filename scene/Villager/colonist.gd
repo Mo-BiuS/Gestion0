@@ -32,16 +32,17 @@ func caseMovement(delta:float)->void:
 		frame = 0
 	else:
 		var direction = position.direction_to(nextCasePos)
-		if(direction.x <= 0 && direction.y <= 0):
-			if(abs(direction.x) < abs(direction.y)): play("north")
-			else: play("west")
-		elif(direction.x > 0 && direction.y <= 0):
-			if(abs(direction.x) < abs(direction.y)): play("north")
-			else: play("east")
-		elif(direction.x <= 0 && direction.y > 0):
-			if(abs(direction.x) < abs(direction.y)): play("south")
-			else: play("west")
-		if(direction.x > 0 && direction.y > 0):
-			if(abs(direction.x) < abs(direction.y)): play("south")
-			else: play("east")
 		position+=direction*SPEED*delta
+		if(!is_playing()):
+			if(direction.x <= 0 && direction.y <= 0):
+				if(abs(direction.x) < abs(direction.y)): play("north")
+				else: play("west")
+			elif(direction.x > 0 && direction.y <= 0):
+				if(abs(direction.x) < abs(direction.y)): play("north")
+				else: play("east")
+			elif(direction.x <= 0 && direction.y > 0):
+				if(abs(direction.x) < abs(direction.y)): play("south")
+				else: play("west")
+			if(direction.x > 0 && direction.y > 0):
+				if(abs(direction.x) < abs(direction.y)): play("south")
+				else: play("east")
