@@ -2,7 +2,7 @@ class_name Colonist extends AnimatedSprite2D
 
 @onready var terrain = $"../../../Terrain"
 
-enum s { IDLE , MOVING_IDLE, MOVING, BUILDING }
+enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD }
 var state = s.IDLE
 var stateAfterMoving = s.IDLE
 
@@ -17,6 +17,8 @@ var odlPos:Vector2i = Vector2i(position/32)
 var nextCasePos:Vector2
 var pathTo:Array[Vector2i] = []
 var buildTime:float = 0
+
+signal roadConstructedAt(pos:Vector2i)
 
 func _ready():
 	var pos:Vector2i = Vector2i(position/32)
@@ -36,10 +38,13 @@ func _process(delta):
 				pathTo.pop_front()
 				if pathTo.is_empty():state = stateAfterMoving
 				else: nextCasePos = pathTo[0]*32+Vector2i(16,16)
-		s.BUILDING:
+		s.BUILDING_ROAD:
 			buildTime-=delta
 			if buildTime <= 0:
 				state = s.IDLE
+				roadConstructedAt.emit(Vector2i(position/32))
+				speedModifier = terrain.getSpeedModifierAt(pos)
+
 
 func idleMovement(delta:float)->void:
 	waiting-=delta
@@ -54,7 +59,7 @@ func goBuildAt(pathTo:Array[Vector2i], buildTime:float)->void:
 	self.pathTo = pathTo
 	self.buildTime = buildTime
 	state = s.MOVING
-	stateAfterMoving = s.BUILDING
+	stateAfterMoving = s.BUILDING_ROAD
 
 func caseMovement(delta:float)->bool:
 	if(position.distance_to(nextCasePos) < 2):

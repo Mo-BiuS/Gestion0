@@ -76,6 +76,7 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 			for i in pathIn.keys():
 				if pathIn[i] == cost:
 					var direction:Array[Vector2i] = [i+Vector2i(0,-1),i+Vector2i(0,1),i+Vector2i(1,0),i+Vector2i(-1,0)]
+					direction.shuffle()
 					for d in direction :
 						if(isValidForColonist(d) && !pathIn.has(d)):
 							var additionalCost = getTileCost(d)
@@ -93,9 +94,12 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 						cost = pathIn[d]
 						rt = d
 				pathOut.push_front(rt)
-			self.clear_layer(4)
-			self.set_cells_terrain_connect(4,pathOut,4,0)
+	self.clear_layer(4)
+	self.set_cells_terrain_connect(4,pathOut,4,0)
 	return pathOut
+
+func roadConstructedAt(pos:Vector2i):
+	self.set_cells_terrain_connect(2,[pos],3,0)
 
 func isValidForColonist(pos:Vector2i)->bool:
 	return self.get_cell_source_id(1,pos) == 1

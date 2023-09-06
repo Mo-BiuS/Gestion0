@@ -6,6 +6,10 @@ extends Node2D
 
 var ongoingRoadWork:Array[Vector2i] = []
 
+func _ready():
+	for c in villagerList.get_children():
+		c.roadConstructedAt.connect(roadConstructedAt)
+
 func _process(delta):
 	var idleColonist:Array[Colonist] = getIdleColonist()
 	if(!idleColonist.is_empty()):
@@ -35,6 +39,10 @@ func assignRoadWork(idleColonist:Array[Colonist]):
 			ongoingRoadWork.push_back(Vector2i(closestRoad))
 			roadWork.erase(closestRoad)
 
+func roadConstructedAt(pos:Vector2i):
+	buildingHandler.roadConstructedAt(pos)
+	terrain.roadConstructedAt(pos)
+	ongoingRoadWork.erase(pos)
 
 func getIdleColonist()->Array[Colonist]:
 	var rep:Array[Colonist] = []

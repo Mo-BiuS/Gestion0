@@ -62,5 +62,9 @@ func refreshRoad()->void:
 	roadQueue.clear_layer(0)
 	roadQueue.set_cells_terrain_connect(0,roadToBuild,0,0)
 
+func roadConstructedAt(pos:Vector2i):
+	roadToBuild.erase(pos)
+	refreshRoad()
+
 func getRoadWork()->Array[Vector2i]:
 	return roadToBuild.duplicate()

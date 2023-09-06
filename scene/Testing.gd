@@ -13,6 +13,7 @@ var buildingId:int = -1
 var gold = 240
 var wood = 360
 
+
 func _process(delta):
 	hud.setGold(gold)
 	hud.setWood(wood)
