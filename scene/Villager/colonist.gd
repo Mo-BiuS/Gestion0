@@ -1,5 +1,7 @@
 class_name Colonist extends AnimatedSprite2D
 
+@onready var terrain = $"../../../Terrain"
+
 enum s { IDLE , MOVING_IDLE, MOVING, BUILDING }
 var state = s.IDLE
 var stateAfterMoving = s.IDLE
@@ -10,16 +12,25 @@ var waiting:float = randf_range(MIN_WAITING,MAX_WAITING)
 
 const MIN_CASE_POS = 2
 const SPEED = 8.0
+var speedModifier = 1.0
+var odlPos:Vector2i = Vector2i(position/32)
 var nextCasePos:Vector2
 var pathTo:Array[Vector2i] = []
 var buildTime:float = 0
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _ready():
+	var pos:Vector2i = Vector2i(position/32)
+	speedModifier = terrain.getSpeedModifierAt(pos)
 func _process(delta):
+	var pos:Vector2i = Vector2i(position/32)
+	if(odlPos != pos):
+		speedModifier = terrain.getSpeedModifierAt(pos)
+		odlPos = pos
 	match state:
 		s.IDLE:idleMovement(delta)
-		s.MOVING_IDLE:caseMovement(delta)
+		s.MOVING_IDLE:
+			if(caseMovement(delta)):
+				state = s.IDLE
 		s.MOVING:
 			if(caseMovement(delta)):
 				pathTo.pop_front()
@@ -47,13 +58,12 @@ func goBuildAt(pathTo:Array[Vector2i], buildTime:float)->void:
 
 func caseMovement(delta:float)->bool:
 	if(position.distance_to(nextCasePos) < 2):
-		state = s.IDLE
 		stop()
 		frame = 0
 		return true
 	else:
 		var direction = position.direction_to(nextCasePos)
-		position+=direction*SPEED*delta
+		position+=direction*SPEED*delta*speedModifier
 		if(!is_playing()):
 			if(direction.x <= 0 && direction.y <= 0):
 				if(abs(direction.x) < abs(direction.y)): play("north")

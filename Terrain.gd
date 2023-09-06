@@ -5,6 +5,7 @@ class_name Terrain extends TileMap
 
 var rect:Rect2i=Rect2i(0,0,0,0)
 var tileCost:Dictionary
+var speedModifier:Dictionary
 var impassableTerrain:Array
 
 func _ready():
@@ -13,6 +14,10 @@ func _ready():
 	tileCost[100]=0.25 #Path
 	tileCost[6]=2 #Forest
 	tileCost[7]=3 #DeepForest
+	speedModifier[100]=2 #Path
+	speedModifier[6]=0.7 #Forest
+	speedModifier[7]=0.5 #DeepForest
+	
 	var p = northWest.position
 	var l = southEast.position-northWest.position
 	rect = Rect2i(p.x,p.y,l.x,l.y)
@@ -98,4 +103,9 @@ func getTileCost(pos:Vector2i)->float:
 	var c = 1
 	var tileId = self.get_cell_source_id(2,pos)
 	if(tileCost.has(tileId)) : c = tileCost[tileId]
+	return c
+func getSpeedModifierAt(pos:Vector2i)->float:
+	var c = 1
+	var tileId = self.get_cell_source_id(2,pos)
+	if(speedModifier.has(tileId)) : c = speedModifier[tileId]
 	return c
