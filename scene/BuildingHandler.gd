@@ -61,3 +61,9 @@ func addRoad(roadToAdd:Array[Vector2i], budget:int)->int:
 func refreshRoad()->void:
 	roadQueue.clear_layer(0)
 	roadQueue.set_cells_terrain_connect(0,roadToBuild,0,0)
+
+func getRoadWork(ongoingRoadWork:Array[Vector2i])->Array[Vector2i]:
+	var rep:Array[Vector2i] = roadToBuild.duplicate()
+	for i in ongoingRoadWork:
+		rep.erase(i)
+	return rep

@@ -56,3 +56,46 @@ func unique_array(array: Array[Vector2i]) -> Array[Vector2i]:
 		if not unique.has(item):
 			unique.append(item)
 	return unique
+
+func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
+	var pathIn:Dictionary
+	var pathOut:Array[Vector2i] = []
+	if isValidForColonist(from) && isValidForColonist(to):
+		var cost:float = 0
+		var nextCost:float = 0
+		var foundSomething = true
+		pathIn[from] = cost
+		while(foundSomething && !pathIn.has(to)):
+			foundSomething = false
+			nextCost+=1
+			for i in pathIn.keys():
+				if pathIn[i] == cost:
+					var direction:Array[Vector2i] = [i+Vector2i(0,-1),i+Vector2i(0,1),i+Vector2i(1,0),i+Vector2i(-1,0)]
+					for d in direction :
+						if(isValidForColonist(d) && !pathIn.has(d)):
+							var additionalCost = getTileCost(d)
+							nextCost = min(nextCost, cost+additionalCost)
+							pathIn[d] = cost+additionalCost
+							foundSomething = true
+			cost = nextCost
+		if(pathIn.has(to)):
+			pathOut.push_front(to)
+			var rt:Vector2i = to
+			while(!pathOut.has(from)):
+				var direction:Array[Vector2i] = [rt+Vector2i(0,-1),rt+Vector2i(0,1),rt+Vector2i(1,0),rt+Vector2i(-1,0)]
+				for d in direction :
+					if pathIn.has(d) && pathIn[d] < cost:
+						cost = pathIn[d]
+						rt = d
+				pathOut.push_front(rt)
+			self.clear_layer(4)
+			self.set_cells_terrain_connect(4,pathOut,4,0)
+	return pathOut
+
+func isValidForColonist(pos:Vector2i)->bool:
+	return self.get_cell_source_id(1,pos) == 1
+func getTileCost(pos:Vector2i)->float:
+	var c = 1
+	var tileId = self.get_cell_source_id(2,pos)
+	if(tileCost.has(tileId)) : c = tileCost[tileId]
+	return c
