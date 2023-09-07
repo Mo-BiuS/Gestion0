@@ -79,23 +79,24 @@ func buildingConstructedAt(pos:Vector2i):
 
 func cancelRoadAt(pos:Vector2i):
 	if ongoingRoadWork.has(pos):
+		ongoingRoadWork.erase(pos)
 		for v in villagerList.get_children():
 			if ((v.stateAfterMoving == v.s.BUILDING_ROAD && !v.pathTo.is_empty() && v.pathTo[-1] == pos) || (v.state == v.s.BUILDING_ROAD && Vector2i(v.position/32) == pos)):
 				v.stateAfterMoving = v.s.IDLE
 				v.state = v.s.IDLE
 				v.buildingProgress.hide()
 				v.stop()
-				ongoingRoadWork.erase(pos)
 
 func cancelBuildingAt(pos:Vector2i):
 	if ongoingBuildingWork.has(pos):
+		ongoingBuildingWork.erase(pos)
 		for v in villagerList.get_children():
 			if ((v.stateAfterMoving == v.s.BUILDING_BUILDING && !v.pathTo.is_empty() && v.pathTo[-1] == pos) || (v.state == v.s.BUILDING_BUILDING && Vector2i(v.position/32) == pos)):
+				
 				v.stateAfterMoving = v.s.IDLE
 				v.state = v.s.IDLE
 				v.buildingProgress.hide()
 				v.stop()
-				ongoingBuildingWork.erase(pos)
 
 func getIdleColonist()->Array[Colonist]:
 	var rep:Array[Colonist] = []
