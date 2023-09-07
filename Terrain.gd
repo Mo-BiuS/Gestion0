@@ -58,7 +58,8 @@ func selectAtArray(pos:Vector2i,size:float):
 							if(!valueLeft.has(cost+additionalCost)):valueLeft.append(cost+additionalCost)
 							pathIn[d] = cost+additionalCost
 			valueLeft.erase(cost)
-			cost = valueLeft.min()
+			if !valueLeft.is_empty():cost = valueLeft.min()
+			else: cost = size
 	return pathIn.keys()
 	
 func unique_array(array: Array[Vector2i]) -> Array[Vector2i]:
@@ -87,7 +88,8 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 							if(!valueLeft.has(cost+additionalCost)):valueLeft.append(cost+additionalCost)
 							pathIn[d] = cost+additionalCost
 			valueLeft.erase(cost)
-			cost = valueLeft.min()
+			if(!valueLeft.is_empty()):cost = valueLeft.min()
+			else: cost = 0
 		#self.clear_layer(4)
 		#self.set_cells_terrain_connect(4,pathIn.keys(),4,0)
 		if(pathIn.has(to)):
