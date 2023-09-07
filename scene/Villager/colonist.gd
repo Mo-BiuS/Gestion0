@@ -3,7 +3,7 @@ class_name Colonist extends AnimatedSprite2D
 @onready var terrain = $"../../../Terrain"
 @onready var buildingProgress:ProgressBar = $ProgressBar
 
-enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD }
+enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD, BUILDING_BUILDING }
 var state = s.IDLE
 var stateAfterMoving = s.IDLE
 
@@ -20,6 +20,7 @@ var pathTo:Array[Vector2i] = []
 var buildTime:float = 0
 
 signal roadConstructedAt(pos:Vector2i)
+signal buildingConstructedAt(pos:Vector2i)
 
 func _ready():
 	var pos:Vector2i = Vector2i(position/32)
@@ -50,6 +51,14 @@ func _process(delta):
 				buildingProgress.hide()
 				roadConstructedAt.emit(Vector2i(position/32))
 				speedModifier = terrain.getSpeedModifierAt(pos)
+		s.BUILDING_BUILDING:
+			buildTime-=delta
+			buildingProgress.value+=delta
+			if buildTime <= 0:
+				state = s.IDLE
+				stateAfterMoving = s.IDLE
+				buildingProgress.hide()
+				buildingConstructedAt.emit(Vector2i(position/32))
 
 
 func idleMovement(delta:float)->void:
@@ -61,13 +70,21 @@ func idleMovement(delta:float)->void:
 		nextCasePos = Vector2(nextPosX,nextPosY)
 		state = s.MOVING_IDLE
 
-func goBuildAt(pathTo:Array[Vector2i], buildTime:float)->void:
+func goBuildRoadAt(pathTo:Array[Vector2i], buildTime:float)->void:
 	self.pathTo = pathTo
 	self.buildTime = buildTime
 	buildingProgress.max_value = buildTime
 	buildingProgress.value = 0
 	state = s.MOVING
 	stateAfterMoving = s.BUILDING_ROAD
+func goBuildAt(pathTo:Array[Vector2i], buildTime:float)->void:
+	self.pathTo = pathTo
+	self.buildTime = buildTime
+	buildingProgress.max_value = buildTime
+	buildingProgress.value = 0
+	state = s.MOVING
+	stateAfterMoving = s.BUILDING_BUILDING
+
 
 func caseMovement(delta:float)->bool:
 	if(position.distance_to(nextCasePos) < 2):

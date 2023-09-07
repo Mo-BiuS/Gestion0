@@ -19,6 +19,7 @@ func _process(delta):
 			if Vector2i(i.position/32) == pos:
 				refund.emit(i)
 				i.queue_free()
+				villagerHandler.cancelBuildingAt(Vector2i(i.position/32))
 				break
 		if(roadToBuild.has(pos)):
 			roadToBuild.erase(pos)
@@ -68,5 +69,18 @@ func roadConstructedAt(pos:Vector2i):
 	roadToBuild.erase(pos)
 	refreshRoad()
 
+func buildingConstructedAt(pos:Vector2i):
+	for i in buildingQueue.get_children():
+		if Vector2i(i.getPos()) == pos:
+			buildingQueue.remove_child(i)
+			buildingList.add_child(i)
+			i.setShadow(0)
+
 func getRoadWork()->Array[Vector2i]:
 	return roadToBuild.duplicate()
+func getBuildingWork()->Array[Building]:
+	var queue = buildingQueue.get_children()
+	var rep:Array[Building]
+	for i in queue:
+		if i is Building : rep.append(i)
+	return rep

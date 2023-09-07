@@ -16,3 +16,6 @@ func setShadow(v:int)->void:
 		0: self.modulate = Color(1,1,1,1)
 		1: self.modulate = Color(1,1,1,0.5)
 		2: self.modulate = Color(1,0.5,0.5,0.5)
+
+func getPos()->Vector2:
+	return Vector2i(position/32)
