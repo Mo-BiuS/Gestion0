@@ -4,6 +4,7 @@ class_name BuildingHandler extends Node2D
 @onready var buildingQueue=$BuildingQueue
 @onready var roadQueue=$RoadQueue
 @onready var terrain=$"../Terrain"
+@onready var villagerHandler:VillagerHandler = $"../VillagerHandler"
 
 const ROAD_COST = 1
 var roadToBuild:Array[Vector2i]
@@ -23,6 +24,7 @@ func _process(delta):
 			roadToBuild.erase(pos)
 			refreshRoad()
 			refundRoad.emit(ROAD_COST)
+			villagerHandler.cancelRoadAt(pos)
 
 func freeSpaceAt(pos:Vector2i)->bool:
 	var rep:bool = true

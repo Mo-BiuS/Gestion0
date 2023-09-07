@@ -1,4 +1,4 @@
-extends Node2D
+class_name VillagerHandler extends Node2D
 
 @onready var villagerList:Node2D = $VillagerList
 @onready var buildingHandler:BuildingHandler = $"../BuildingHandler"
@@ -34,7 +34,7 @@ func assignRoadWork(idleColonist:Array[Colonist]):
 			if ((path.size() > localRoadPath.size() && !localRoadPath.is_empty())) || path.is_empty() : 
 				closestRoad = road
 				path = localRoadPath	
-		if !path.is_empty(): #Si chemin trouvé
+		if !path.is_empty() && !path.has(Vector2i(0,0)): #Si chemin trouvé
 			colonist.goBuildAt(path, 5)
 			ongoingRoadWork.push_back(Vector2i(closestRoad))
 			roadWork.erase(closestRoad)
@@ -43,6 +43,14 @@ func roadConstructedAt(pos:Vector2i):
 	buildingHandler.roadConstructedAt(pos)
 	terrain.roadConstructedAt(pos)
 	ongoingRoadWork.erase(pos)
+
+func cancelRoadAt(pos:Vector2i):
+	if ongoingRoadWork.has(pos):
+		for v in villagerList.get_children():
+			if ((v.stateAfterMoving == v.s.BUILDING_ROAD && v.pathTo[-1] == pos) || (v.state == v.s.BUILDING_ROAD && Vector2i(v.position/32) == pos)):
+				v.stateAfterMoving = v.s.IDLE
+				v.state = v.s.IDLE
+				v.stop()
 
 func getIdleColonist()->Array[Colonist]:
 	var rep:Array[Colonist] = []
