@@ -120,3 +120,6 @@ func getSpeedModifierAt(pos:Vector2i)->float:
 	var tileId = self.get_cell_source_id(2,pos)
 	if(speedModifier.has(tileId)) : c = speedModifier[tileId]
 	return c
+
+func inForest(pos:Vector2i)->bool:
+	return self.get_cell_source_id(2,pos) == 6 || self.get_cell_source_id(2,pos) == 7

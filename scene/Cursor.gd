@@ -51,7 +51,8 @@ func refreshPointerPos()->void:
 
 
 func isPositionValid()->bool:
-	return !specialPositionCheck() && canAfford && building.allowedTerrainList.has(terrain.get_cell_source_id(1,building.position/32)) && buildingHandler.freeSpaceAt(building.position/32)
+	var pos:Vector2i = Vector2i(building.position/32)
+	return !specialPositionCheck() && canAfford && !terrain.inForest(pos)  && building.allowedTerrainList.has(terrain.get_cell_source_id(1,pos)) && buildingHandler.freeSpaceAt(pos)
 
 func specialPositionCheck()->bool:
 	if(building.specialBuildCondition):
@@ -87,7 +88,7 @@ func handleRoadShadow()->void:
 	roadArray = getRoadArea()
 	isRoadValid = true
 	for i in roadArray:
-		if terrain.get_cell_source_id(1,i) != 1 : isRoadValid = false
+		if terrain.get_cell_source_id(1,i) != 1 || terrain.inForest(i) : isRoadValid = false
 	
 	if isRoadValid:
 		roadShadow.set_layer_modulate(0,Color(1,1,1,0.5))
