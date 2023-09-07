@@ -2,7 +2,7 @@ class_name SmallPort extends Building
 
 func _ready():
 	allowedTerrainList = [2]#beach only
-	range = 8
+	range = 7
 	
 	goldCost = 160
 	woodCost = 160

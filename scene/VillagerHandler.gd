@@ -3,6 +3,7 @@ class_name VillagerHandler extends Node2D
 @onready var villagerList:Node2D = $VillagerList
 @onready var buildingHandler:BuildingHandler = $"../BuildingHandler"
 @onready var terrain:Terrain = $"../Terrain"
+@onready var cursor = $"../Cursor"
 
 var ongoingRoadWork:Array[Vector2i] = []
 
@@ -43,14 +44,17 @@ func roadConstructedAt(pos:Vector2i):
 	buildingHandler.roadConstructedAt(pos)
 	terrain.roadConstructedAt(pos)
 	ongoingRoadWork.erase(pos)
+	cursor.refreshPointerPos()
 
 func cancelRoadAt(pos:Vector2i):
 	if ongoingRoadWork.has(pos):
 		for v in villagerList.get_children():
-			if ((v.stateAfterMoving == v.s.BUILDING_ROAD && v.pathTo[-1] == pos) || (v.state == v.s.BUILDING_ROAD && Vector2i(v.position/32) == pos)):
+			if ((v.stateAfterMoving == v.s.BUILDING_ROAD && !v.pathTo.is_empty() && v.pathTo[-1] == pos) || (v.state == v.s.BUILDING_ROAD && Vector2i(v.position/32) == pos)):
 				v.stateAfterMoving = v.s.IDLE
 				v.state = v.s.IDLE
+				v.buildingProgress.hide()
 				v.stop()
+				ongoingRoadWork.erase(pos)
 
 func getIdleColonist()->Array[Colonist]:
 	var rep:Array[Colonist] = []

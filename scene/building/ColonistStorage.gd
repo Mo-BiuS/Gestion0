@@ -2,7 +2,7 @@ class_name ColonistStorage extends Building
 
 func _ready():
 	allowedTerrainList = [1]#ground only
-	range = 6
+	range = 5
 	
 	goldCost = 100
 	woodCost = 120
