@@ -69,6 +69,7 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 		var cost:float = 0
 		var nextCost:float = 0
 		var foundSomething = true
+		var valueLeft:Array[float]=[cost]
 		pathIn[from] = cost
 		while(foundSomething && !pathIn.has(to)):
 			foundSomething = false
@@ -80,10 +81,13 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 					for d in direction :
 						if(isValidForColonist(d) && !pathIn.has(d)):
 							var additionalCost = getTileCost(d)
-							nextCost = min(nextCost, cost+additionalCost)
+							if(!valueLeft.has(cost+additionalCost)):valueLeft.append(cost+additionalCost)
 							pathIn[d] = cost+additionalCost
 							foundSomething = true
-			cost = nextCost
+			valueLeft.erase(cost)
+			cost = valueLeft.min()
+		#self.clear_layer(4)
+		#self.set_cells_terrain_connect(4,pathIn.keys(),4,0)
 		if(pathIn.has(to)):
 			pathOut.push_front(to)
 			var rt:Vector2i = to
@@ -94,15 +98,16 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 						cost = pathIn[d]
 						rt = d
 				pathOut.push_front(rt)
-	self.clear_layer(4)
-	self.set_cells_terrain_connect(4,pathOut,4,0)
+	#self.clear_layer(4)
+	#self.set_cells_terrain_connect(4,pathOut,4,0)
 	return pathOut
 
 func roadConstructedAt(pos:Vector2i):
 	self.set_cells_terrain_connect(2,[pos],3,0)
 
 func isValidForColonist(pos:Vector2i)->bool:
-	return self.get_cell_source_id(1,pos) == 1
+	var id = self.get_cell_source_id(1,pos)
+	return id == 1 || id == 2
 func getTileCost(pos:Vector2i)->float:
 	var c = 1
 	var tileId = self.get_cell_source_id(2,pos)

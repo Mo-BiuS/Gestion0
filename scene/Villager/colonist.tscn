@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://h3lqtndyd3g2"]
+[gd_scene load_steps=22 format=3 uid="uid://h3lqtndyd3g2"]
 
 [ext_resource type="Texture2D" uid="uid://b4uvs33g4iw7b" path="res://ressources/Villager/colonist.png" id="1_fa0bf"]
 [ext_resource type="Script" path="res://scene/Villager/colonist.gd" id="2_yqpxk"]
@@ -138,8 +138,32 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mk740"]
+bg_color = Color(0.201492, 0.0919769, 0.271268, 1)
+corner_detail = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jidro"]
+bg_color = Color(0.799139, 0.739175, 0.929827, 1)
+
 [node name="Colonist" type="AnimatedSprite2D"]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_grhom")
 animation = &"south"
 script = ExtResource("2_yqpxk")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+visible = false
+texture_filter = 1
+offset_left = -8.0
+offset_top = -16.0
+offset_right = 8.0
+offset_bottom = -8.0
+theme_override_styles/background = SubResource("StyleBoxFlat_mk740")
+theme_override_styles/fill = SubResource("StyleBoxFlat_jidro")
+step = 0.001
+value = 50.0
+show_percentage = false
