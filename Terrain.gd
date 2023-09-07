@@ -41,7 +41,6 @@ func setSelection(a:Array[Vector2i], red:bool=false)->void:
 	self.set_cells_terrain_connect(3,a,4,0)
 
 func selectAtArray(pos:Vector2i,size:float)->Array[Vector2i]:
-	
 	if rect.has_point(pos*32):
 		var rep:Array[Vector2i] = [pos]
 		var posId = self.get_cell_source_id(2,pos)
@@ -68,11 +67,9 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 	if isValidForColonist(from) && isValidForColonist(to):
 		var cost:float = 0
 		var nextCost:float = 0
-		var foundSomething = true
 		var valueLeft:Array[float]=[cost]
 		pathIn[from] = cost
-		while(foundSomething && !pathIn.has(to)):
-			foundSomething = false
+		while(!valueLeft.is_empty() && !pathIn.has(to)):
 			nextCost+=1
 			for i in pathIn.keys():
 				if pathIn[i] == cost:
@@ -83,7 +80,6 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 							var additionalCost = getTileCost(d)
 							if(!valueLeft.has(cost+additionalCost)):valueLeft.append(cost+additionalCost)
 							pathIn[d] = cost+additionalCost
-							foundSomething = true
 			valueLeft.erase(cost)
 			cost = valueLeft.min()
 		#self.clear_layer(4)

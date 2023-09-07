@@ -31,7 +31,7 @@ func assignRoadWork(idleColonist:Array[Colonist]):
 		#Calcul route la plus proche
 		for road in roadWork:
 			var localRoadPath:Array[Vector2i] = terrain.pathfindTo(colonistPos, road)
-			if path.size() > localRoadPath.size() || path.is_empty() : 
+			if ((path.size() > localRoadPath.size() && !localRoadPath.is_empty())) || path.is_empty() : 
 				closestRoad = road
 				path = localRoadPath	
 		if !path.is_empty(): #Si chemin trouvé

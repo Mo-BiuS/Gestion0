@@ -12,7 +12,7 @@ const MAX_WAITING:float = 1.5
 var waiting:float = randf_range(MIN_WAITING,MAX_WAITING)
 
 const MIN_CASE_POS = 2
-const SPEED = 8.0
+const SPEED = 12.0
 var speedModifier = 1.0
 var odlPos:Vector2i = Vector2i(position/32)
 var nextCasePos:Vector2
@@ -46,6 +46,7 @@ func _process(delta):
 			buildingProgress.value+=delta
 			if buildTime <= 0:
 				state = s.IDLE
+				stateAfterMoving = s.IDLE
 				buildingProgress.hide()
 				roadConstructedAt.emit(Vector2i(position/32))
 				speedModifier = terrain.getSpeedModifierAt(pos)
