@@ -108,6 +108,8 @@ func pathfindTo(from:Vector2i, to:Vector2i)->Array[Vector2i]:
 
 func roadConstructedAt(pos:Vector2i):
 	self.set_cells_terrain_connect(2,[pos],3,0)
+func roadDeletedAt(pos:Vector2i):
+	self.set_cells_terrain_connect(2,[pos],0,-1)
 
 func isValidForColonist(pos:Vector2i)->bool:
 	var id = self.get_cell_source_id(1,pos)
@@ -125,3 +127,6 @@ func getSpeedModifierAt(pos:Vector2i)->float:
 
 func inForest(pos:Vector2i)->bool:
 	return self.get_cell_source_id(2,pos) == 6 || self.get_cell_source_id(2,pos) == 7
+
+func roadAt(pos:Vector2i)->bool:
+	return self.get_cell_source_id(2,pos) == 100

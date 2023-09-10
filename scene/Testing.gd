@@ -77,6 +77,7 @@ func _process(delta):
 			elif(Input.is_action_just_released("validate") && !inMenu):
 				state = State.DELETE_0
 				cursor.finishDeleting()
+				buildingHanlder.setDeleting(cursor.deletingArray)
 
 func canAfford(b)->bool:
 	return b.goldCost <= gold && b.woodCost <= wood

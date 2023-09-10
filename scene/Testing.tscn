@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bd721p8qhbia8"]
+[gd_scene load_steps=36 format=3 uid="uid://bd721p8qhbia8"]
 
 [ext_resource type="Script" path="res://scene/Testing.gd" id="1_01lyx"]
 [ext_resource type="Texture2D" uid="uid://dd3m3ix5q66ck" path="res://ressources/UI/Borders.png" id="2_thc5l"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scene/VillagerHandler.gd" id="13_p767d"]
 [ext_resource type="PackedScene" uid="uid://h3lqtndyd3g2" path="res://scene/Villager/colonist.tscn" id="13_whk88"]
 [ext_resource type="PackedScene" uid="uid://cocsxam2vkg1e" path="res://scene/Building/SmallPort.tscn" id="15_feff2"]
+[ext_resource type="Texture2D" uid="uid://c5hwd4iar2qch" path="res://ressources/UI/delete.png" id="17_x5bx3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jckeh"]
 texture = ExtResource("3_x7x36")
@@ -1304,7 +1305,21 @@ sources/100 = SubResource("TileSetAtlasSource_aop31")
 sources/201 = SubResource("TileSetAtlasSource_kqm4y")
 sources/200 = SubResource("TileSetAtlasSource_3bdd4")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8i4oy"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sw6ur"]
+texture = ExtResource("17_x5bx3")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+0:0/0/terrain = 0
+
+[sub_resource type="TileSet" id="TileSet_6ueyw"]
+tile_size = Vector2i(32, 32)
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+sources/0 = SubResource("TileSetAtlasSource_sw6ur")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0sfdc"]
 texture = ExtResource("3_lwnq5")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -1393,7 +1408,7 @@ tile_size = Vector2i(32, 32)
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
-sources/0 = SubResource("TileSetAtlasSource_8i4oy")
+sources/0 = SubResource("TileSetAtlasSource_0sfdc")
 
 [node name="Testing" type="Node2D"]
 y_sort_enabled = true
@@ -1463,6 +1478,18 @@ position = Vector2(632, 432)
 y_sort_enabled = true
 script = ExtResource("13_e27mp")
 
+[node name="DeleteQueue" type="TileMap" parent="BuildingHandler"]
+tile_set = SubResource("TileSet_6ueyw")
+cell_quadrant_size = 32
+format = 2
+layer_0/modulate = Color(1, 1, 1, 0.588235)
+
+[node name="RoadQueue" type="TileMap" parent="BuildingHandler"]
+texture_filter = 1
+tile_set = SubResource("TileSet_86so7")
+format = 2
+layer_0/modulate = Color(1, 1, 1, 0.25098)
+
 [node name="BuildingQueue" type="Node2D" parent="BuildingHandler"]
 
 [node name="BuildingList" type="Node2D" parent="BuildingHandler"]
@@ -1472,12 +1499,6 @@ y_sort_enabled = true
 y_sort_enabled = true
 position = Vector2(624, 464)
 region_rect = Rect2(96, 0, 32, 32)
-
-[node name="RoadQueue" type="TileMap" parent="BuildingHandler"]
-texture_filter = 1
-tile_set = SubResource("TileSet_86so7")
-format = 2
-layer_0/modulate = Color(1, 1, 1, 0.25098)
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(544, 288)
