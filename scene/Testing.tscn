@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bd721p8qhbia8"]
+[gd_scene load_steps=37 format=3 uid="uid://bd721p8qhbia8"]
 
 [ext_resource type="Script" path="res://scene/Testing.gd" id="1_01lyx"]
 [ext_resource type="Texture2D" uid="uid://dd3m3ix5q66ck" path="res://ressources/UI/Borders.png" id="2_thc5l"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scene/VillagerHandler.gd" id="13_p767d"]
 [ext_resource type="PackedScene" uid="uid://h3lqtndyd3g2" path="res://scene/Villager/colonist.tscn" id="13_whk88"]
 [ext_resource type="PackedScene" uid="uid://cocsxam2vkg1e" path="res://scene/Building/SmallPort.tscn" id="15_feff2"]
+[ext_resource type="PackedScene" uid="uid://ckskk4mgl6ft1" path="res://scene/Building/ColonistHouse.tscn" id="17_kugjs"]
 [ext_resource type="Texture2D" uid="uid://c5hwd4iar2qch" path="res://ressources/UI/delete.png" id="17_x5bx3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jckeh"]
@@ -1495,6 +1496,12 @@ layer_0/modulate = Color(1, 1, 1, 0.25098)
 [node name="BuildingList" type="Node2D" parent="BuildingHandler"]
 y_sort_enabled = true
 
+[node name="ColonistHouse" parent="BuildingHandler/BuildingList" instance=ExtResource("17_kugjs")]
+position = Vector2(656, 432)
+
+[node name="ColonistHouse2" parent="BuildingHandler/BuildingList" instance=ExtResource("17_kugjs")]
+position = Vector2(592, 432)
+
 [node name="SmallPort" parent="BuildingHandler/BuildingList" instance=ExtResource("15_feff2")]
 y_sort_enabled = true
 position = Vector2(624, 464)
@@ -1518,5 +1525,6 @@ layer_0/modulate = Color(1, 1, 1, 0.501961)
 [node name="HUD" parent="." instance=ExtResource("10_pn6wm")]
 
 [connection signal="refund" from="BuildingHandler" to="." method="_on_building_handler_refund"]
+[connection signal="refundDestroyedBuilding" from="BuildingHandler" to="." method="_on_building_handler_refund_destroyed_building"]
 [connection signal="refundRoad" from="BuildingHandler" to="." method="_on_building_handler_refund_road"]
 [connection signal="buidldingSelected" from="HUD" to="." method="_on_hud_buidlding_selected"]

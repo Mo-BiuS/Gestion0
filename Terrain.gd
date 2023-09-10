@@ -110,6 +110,13 @@ func roadConstructedAt(pos:Vector2i):
 	self.set_cells_terrain_connect(2,[pos],3,0)
 func roadDeletedAt(pos:Vector2i):
 	self.set_cells_terrain_connect(2,[pos],0,-1)
+	var direction:Array[Vector2i] = [pos+Vector2i(1,0),pos+Vector2i(-1,0),pos+Vector2i(0,-1),pos+Vector2i(0,1)]
+	var refresh:Array[Vector2i] = []
+	for i in direction:
+		if roadAt(i):refresh.push_back(i)
+	print(refresh.size())
+	self.set_cells_terrain_connect(2,refresh,0,-1)
+	self.set_cells_terrain_connect(2,refresh,3,0)
 
 func isValidForColonist(pos:Vector2i)->bool:
 	var id = self.get_cell_source_id(1,pos)

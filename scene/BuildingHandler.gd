@@ -10,10 +10,11 @@ class_name BuildingHandler extends Node2D
 const ROAD_COST = 1
 var roadToBuild:Array[Vector2i]
 var roadToDelete:Array[Vector2i]
-var buildingToDelete:Array[Vector2i]
+var buildingToDelete:Array[Building]
 
 signal refund(b)
 signal refundRoad(gold:int)
+signal refundDestroyedBuilding(b)
 
 func _process(delta):
 	if Input.is_action_pressed("cancel"):
@@ -33,10 +34,11 @@ func _process(delta):
 			roadToDelete.erase(pos)
 			refreshDelete()
 			villagerHandler.cancelDeleteRoadAt(pos)
-		if(buildingToDelete.has(pos)):
-			buildingToDelete.erase(pos)
-			refreshDelete()
-			villagerHandler.cancelDeleteBuildingAt(pos)
+		for i in buildingToDelete:
+			if(Vector2i(i.getPos()) == pos):
+				buildingToDelete.erase(i)
+				refreshDelete()
+				villagerHandler.cancelDeleteBuildingAt(i)
 
 func freeSpaceAt(pos:Vector2i)->bool:
 	var rep:bool = true
@@ -88,6 +90,16 @@ func buildingConstructedAt(pos:Vector2i):
 			buildingQueue.remove_child(i)
 			buildingList.add_child(i)
 			i.setShadow(0)
+func buildingDeletedAt(pos:Vector2i)->Building:
+	for i in buildingList.get_children():
+		if Vector2i(i.getPos()) == pos:
+			buildingToDelete.erase(i)
+			buildingList.remove_child(i)
+			refundDestroyedBuilding.emit(i)
+			refreshDelete()
+			return i
+	return null
+
 
 func getRoadWork()->Array[Vector2i]:
 	return roadToBuild.duplicate()
@@ -99,18 +111,28 @@ func getBuildingWork()->Array[Building]:
 	return rep
 func getDeletingRoadWork()->Array[Vector2i]:
 	return roadToDelete.duplicate()
+func getDeletingBuildingWork()->Array[Building]:
+	return buildingToDelete.duplicate()
 
 func setDeleting(deleteAtPos:Array[Vector2i])->void:
 	for pos in deleteAtPos:
 		for building in buildingList.get_children():
-			if Vector2i(building.getPos()) == pos && !buildingToDelete.has(pos):
-				buildingToDelete.push_back(pos)
+			if(Vector2i(building.getPos()) == pos):
+				if(buildingToDelete.is_empty()):
+					buildingToDelete.push_back(building)
+				else:
+					for i in buildingToDelete:
+						if !Vector2i(i.getPos()) == pos:
+							buildingToDelete.push_back(building)
 		if(terrain.roadAt(pos) && !roadToDelete.has(pos)):
 			roadToDelete.push_back(pos)
 	refreshDelete()
 
 func refreshDelete()->void:
 	deleteQueue.clear_layer(0)
-	deleteQueue.set_cells_terrain_connect(0,buildingToDelete,0,0)
+	var pos:Array[Vector2i]
+	for i in buildingToDelete:
+		pos.push_back(Vector2i(i.getPos()))
+	deleteQueue.set_cells_terrain_connect(0,pos,0,0)
 	deleteQueue.set_cells_terrain_connect(0,roadToDelete,0,0)
 

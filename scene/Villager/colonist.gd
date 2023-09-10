@@ -22,6 +22,7 @@ var buildTime:float = 0
 signal roadConstructedAt(pos:Vector2i)
 signal roadDeletedAt(pos:Vector2i)
 signal buildingConstructedAt(pos:Vector2i)
+signal buildingDeletedAt(pos:Vector2i)
 
 
 func _ready():
@@ -70,6 +71,14 @@ func _process(delta):
 				stateAfterMoving = s.IDLE
 				buildingProgress.hide()
 				buildingConstructedAt.emit(Vector2i(position/32))
+		s.DELETING_BUILDING:
+			buildTime-=delta
+			buildingProgress.value+=delta
+			if buildTime <= 0:
+				state = s.IDLE
+				stateAfterMoving = s.IDLE
+				buildingProgress.hide()
+				buildingDeletedAt.emit(Vector2i(position/32))
 
 
 func idleMovement(delta:float)->void:
@@ -102,8 +111,13 @@ func goBuildAt(pathTo:Array[Vector2i], buildTime:float)->void:
 	buildingProgress.value = 0
 	state = s.MOVING
 	stateAfterMoving = s.BUILDING_BUILDING
-
-
+func goDeleteBuildingAt(pathTo:Array[Vector2i], buildTime:float)->void:
+	self.pathTo = pathTo
+	self.buildTime = buildTime
+	buildingProgress.max_value = buildTime
+	buildingProgress.value = 0
+	state = s.MOVING
+	stateAfterMoving = s.DELETING_BUILDING
 func caseMovement(delta:float)->bool:
 	if(position.distance_to(nextCasePos) < 2):
 		stop()

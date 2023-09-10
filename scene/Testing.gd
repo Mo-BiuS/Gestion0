@@ -89,6 +89,9 @@ func reduceCost(b)->void:
 func refundCost(b)->void:
 	gold+=b.goldCost
 	wood+=b.woodCost
+func refundHalfCost(b)->void:
+	gold+=b.goldCost/2
+	wood+=b.woodCost/2
 
 func _on_hud_buidlding_selected(toogled, id):
 	if(toogled):
@@ -117,3 +120,7 @@ func _on_building_handler_refund(b):
 	refundCost(b)
 func _on_building_handler_refund_road(gold):
 	self.gold += gold
+
+
+func _on_building_handler_refund_destroyed_building(b):
+	refundHalfCost(b)
