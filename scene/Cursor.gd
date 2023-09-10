@@ -19,6 +19,10 @@ var roadEnd:Vector2i
 var roadArray:Array[Vector2i]
 var isRoadValid:bool
 
+var deletingStart:Vector2i
+var deletingEnd:Vector2i
+var deletingArray:Array[Vector2i]
+
 func _process(delta):
 	var nMousePos:Vector2i =  Vector2i(get_global_mouse_position())/32
 	if(mousePosition != nMousePos):
@@ -40,6 +44,8 @@ func refreshPointerPos()->void:
 	if(buildingId == -1):terrain.selectAt(mousePosition,selectSize)
 	elif(buildingId == 0):
 		handleRoadShadow()
+	elif (buildingId == 100):
+		handleDeletingShadow()
 	else:
 		building.position = mousePosition*32-Vector2i(self.position)+Vector2i(16,16)
 		if(isPositionValid()):
@@ -82,7 +88,6 @@ func getRoadArea()->Array[Vector2i]:
 		for y in range(min(roadStart.y, roadEnd.y),max(roadStart.y, roadEnd.y)+1) : a.push_back(Vector2i(roadStart.x,y))
 		for x in range(min(roadStart.x, roadEnd.x),max(roadStart.x, roadEnd.x)+1) : a.push_back(Vector2i(x,roadEnd.y))
 	return a
-
 func handleRoadShadow()->void:
 	roadEnd = Vector2i(get_global_mouse_position())/32
 	roadArray = getRoadArea()
@@ -99,6 +104,32 @@ func handleRoadShadow()->void:
 	
 	roadShadow.clear_layer(0)
 	roadShadow.set_cells_terrain_connect(0,roadArray,0,0)
+
+#=============================================
+
+func startDeleting()->void:
+	buildingId = 100
+	deletingStart = Vector2i(get_global_mouse_position())/32
+	deletingEnd = deletingStart
+	refreshPointerPos()
+func stopDeleting()->void:
+	buildingId = -1
+	refreshPointerPos()
+func finishDeleting()->void:
+	buildingId = -1
+	refreshPointerPos()
+func getDeletingArea()->Array[Vector2i]:
+	var a:Array[Vector2i] = []
+	for x in range(min(deletingStart.x, deletingEnd.x),max(deletingStart.x, deletingEnd.x)+1) :
+		for y in range(min(deletingStart.y, deletingEnd.y),max(deletingStart.y, deletingEnd.y)+1): 
+			a.push_back(Vector2i(x,y))
+	return a
+func handleDeletingShadow()->void:
+	deletingEnd = Vector2i(get_global_mouse_position())/32
+	deletingArray = getDeletingArea()
+	terrain.setSelection(deletingArray, true)
+
+#=============================================
 
 func setBuilding(id:int)->void:
 	match id :

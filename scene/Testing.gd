@@ -5,7 +5,7 @@ extends Node2D
 @onready var hud:CanvasLayer = $HUD
 @onready var buildingHanlder:BuildingHandler=$BuildingHandler
 
-enum State { IDLE, PLACING_BUILDING, PLACING_ROAD_0, PLACING_ROAD_1 }
+enum State { IDLE, PLACING_BUILDING, PLACING_ROAD_0, PLACING_ROAD_1, DELETE_0, DELETE_1 }
 var state:State = State.IDLE
 
 var buildingId:int = -1
@@ -60,6 +60,23 @@ func _process(delta):
 				state = State.PLACING_ROAD_0
 				if(cursor.isRoadValid):gold = buildingHanlder.addRoad(cursor.roadArray, gold)
 				cursor.finishPlacingRoad()
+		State.DELETE_0:
+			if(Input.is_action_just_pressed("cancel")):
+				hud.deselectBuilding()
+				cursor.stopDeleting()
+				hud.showInfoBar(false)
+				state = State.IDLE
+				buildingId = -1
+			elif(Input.is_action_just_pressed("validate") && !inMenu):
+				state = State.DELETE_1
+				cursor.startDeleting()
+		State.DELETE_1:
+			if(Input.is_action_just_pressed("cancel")):
+				state = State.DELETE_0
+				cursor.stopDeleting()
+			elif(Input.is_action_just_released("validate") && !inMenu):
+				state = State.DELETE_0
+				cursor.finishDeleting()
 
 func canAfford(b)->bool:
 	return b.goldCost <= gold && b.woodCost <= wood
@@ -77,6 +94,10 @@ func _on_hud_buidlding_selected(toogled, id):
 		if(id == 0):
 			state = State.PLACING_ROAD_0
 			hud.setInfoBarToRoad()
+			hud.showInfoBar(true)
+		elif(id == 100):
+			state = State.DELETE_0
+			hud.setInfoBarToDelete()
 			hud.showInfoBar(true)
 		else:
 			buildingId = id

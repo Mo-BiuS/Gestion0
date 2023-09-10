@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+@onready var deconstructTool:Button = $VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/deconstruct
 @onready var colonistPath:Button = $VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/path
 @onready var colonistHouse:Button = $VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/colonisthouse
 @onready var colonistStorage:Button = $VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/colonistStorage
@@ -33,6 +34,7 @@ func deselectBuilding()->void:
 	colonistHouse.button_pressed = false
 	colonistStorage.button_pressed = false
 	smallPort.button_pressed = false
+	deconstructTool.button_pressed = false
 
 func showInfoBar(b:bool)->void:
 	infoBar.visible = b
@@ -42,6 +44,12 @@ func setInfoBarToRoad()->void:
 	setWoodCost(0)
 	setWorkCost(5)
 	setDescription("Simple road")
+
+func setInfoBarToDelete()->void:
+	setGoldCost(0)
+	setWoodCost(0)
+	setWorkCost(0)
+	setDescription("Delete road and structure")
 
 func setBuildingInfo(b)->void:
 	setGoldCost(b.goldCost)
@@ -78,21 +86,32 @@ func _on_path_toggled(button_pressed):
 		colonistHouse.button_pressed = false
 		colonistStorage.button_pressed = false
 		smallPort.button_pressed = false
+		deconstructTool.button_pressed = false
 func _on_colonisthouse_toggled(button_pressed):
 	buidldingSelected.emit(button_pressed, 1)
 	if(button_pressed):
 		colonistPath.button_pressed = false
 		colonistStorage.button_pressed = false
 		smallPort.button_pressed = false
+		deconstructTool.button_pressed = false
 func _on_colonist_storage_toggled(button_pressed):
 	buidldingSelected.emit(button_pressed, 2)
 	if(button_pressed):
 		colonistPath.button_pressed = false
 		colonistHouse.button_pressed = false
 		smallPort.button_pressed = false
+		deconstructTool.button_pressed = false
 func _on_small_port_toggled(button_pressed):
 	buidldingSelected.emit(button_pressed, 3)
 	if(button_pressed):
 		colonistPath.button_pressed = false
 		colonistHouse.button_pressed = false
 		colonistStorage.button_pressed = false
+		deconstructTool.button_pressed = false
+func _on_deconstruct_toggled(button_pressed):
+	buidldingSelected.emit(button_pressed, 100)
+	if(button_pressed):
+		colonistPath.button_pressed = false
+		colonistHouse.button_pressed = false
+		colonistStorage.button_pressed = false
+		smallPort.button_pressed = false
