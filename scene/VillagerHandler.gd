@@ -42,6 +42,7 @@ func assignRoadWork(idleColonist:Array[Colonist])->void:
 				colonist.goBuildRoadAt(path, 5)
 				ongoingRoadWork.push_back(Vector2i(closestRoad))
 				roadWork.erase(closestRoad)
+				idleColonist.erase(colonist)
 
 func assignBuildingWork(idleColonist:Array[Colonist])->void:
 	if(!idleColonist.is_empty()):
@@ -67,6 +68,7 @@ func assignBuildingWork(idleColonist:Array[Colonist])->void:
 				colonist.goBuildAt(path, closestBuilding.workCost)
 				ongoingBuildingWork.push_back(Vector2i(closestBuilding.getPos()))
 				buildingWork.erase(closestBuilding)
+				idleColonist.erase(colonist)
 
 func roadConstructedAt(pos:Vector2i):
 	buildingHandler.roadConstructedAt(pos)

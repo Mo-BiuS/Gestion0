@@ -4,8 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://dsbrkxv0ymiwh" path="res://ressources/Building/woodhouse.png" id="2_yxuq0"]
 
 [node name="ColonistHouse" type="Sprite2D"]
+y_sort_enabled = true
 texture_filter = 1
 texture = ExtResource("2_yxuq0")
 region_enabled = true
-region_rect = Rect2(0, 0, 32, 32)
+region_rect = Rect2(9, 8, 14, 15)
 script = ExtResource("1_g73m2")
