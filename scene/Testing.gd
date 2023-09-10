@@ -21,11 +21,13 @@ func _process(delta):
 	var inMenu:bool = false
 	var mousePos:Vector2i = get_local_mouse_position()
 	for i in hud.getMenuArea():
-		inMenu = inMenu || i.has_point(mousePos*2+(Vector2i(get_viewport_transform().origin)))
+		inMenu = inMenu || i.has_point(Vector2i(mousePos*camera.zoom.x)+(Vector2i(get_viewport_transform().origin)))
 	#print(inMenu)
 	
 	match state:
-		State.IDLE:pass
+		State.IDLE:
+			if(Input.is_action_just_pressed("validate") && !inMenu):
+				print("select building")
 		State.PLACING_BUILDING:
 			var b = cursor.getBuilding()
 			cursor.setCanAfford(canAfford(b))
