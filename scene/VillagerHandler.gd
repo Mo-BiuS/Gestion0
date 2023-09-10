@@ -174,19 +174,19 @@ func getIdleColonist()->Array[Colonist]:
 	return rep
 
 func cancelDeleteBuildingAt(building:Building)->void:
-	if ongoingDeleteRoadWork.has(building):
-		ongoingDeleteRoadWork.erase(building)
+	if ongoingDeleteBuildingWork.has(building):
+		ongoingDeleteBuildingWork.erase(building)
 		for v in villagerList.get_children():
-			if ((v.stateAfterMoving == v.s.DELETING_ROAD && !v.pathTo.is_empty() && v.pathTo[-1] == Vector2i(building.getPos())) || (v.state == v.s.DELETING_ROAD && Vector2i(v.position/32) == Vector2i(building.getPos()))):
+			if ((v.stateAfterMoving == v.s.DELETING_BUILDING && !v.pathTo.is_empty() && v.pathTo[-1] == Vector2i(building.getPos())) || (v.state == v.s.DELETING_BUILDING && Vector2i(v.position/32) == Vector2i(building.getPos()))):
 				v.stateAfterMoving = v.s.IDLE
 				v.state = v.s.IDLE
 				v.buildingProgress.hide()
 				v.stop()
 func cancelDeleteRoadAt(pos:Vector2i)->void:
-	if ongoingDeleteBuildingWork.has(pos):
-		ongoingDeleteBuildingWork.erase(pos)
+	if ongoingDeleteRoadWork.has(pos):
+		ongoingDeleteRoadWork.erase(pos)
 		for v in villagerList.get_children():
-			if ((v.stateAfterMoving == v.s.DELETING_BUILDING && !v.pathTo.is_empty() && v.pathTo[-1] == pos) || (v.state == v.s.DELETING_BUILDING && Vector2i(v.position/32) == pos)):
+			if ((v.stateAfterMoving == v.s.DELETING_ROAD && !v.pathTo.is_empty() && v.pathTo[-1] == pos) || (v.state == v.s.DELETING_ROAD && Vector2i(v.position/32) == pos)):
 				v.stateAfterMoving = v.s.IDLE
 				v.state = v.s.IDLE
 				v.buildingProgress.hide()
