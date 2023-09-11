@@ -220,8 +220,9 @@ func assignHomeToHomeless()->void:
 	if !homelessList.is_empty():
 		var freeHome:Array[Building] = buildingHandler.getFreeHome()
 		for building in freeHome:
-			var path:Array[Vector2i] = terrain.pathfindTo(homelessList[0].position/32, building.getPos())
-			if !path.is_empty():
-				building.habitantsList.push_back(homelessList[0])
-				homelessList[0].house = building
-				homelessList.pop_front()
+			if !homelessList.is_empty():
+				var path:Array[Vector2i] = terrain.pathfindTo(homelessList[0].position/32, building.getPos())
+				if !path.is_empty():
+					building.habitantsList.push_back(homelessList[0])
+					homelessList[0].house = building
+					homelessList.pop_front()

@@ -28,4 +28,5 @@ func getPos()->Vector2:
 func setAllowedHabitants(value:int)->void:
 	allowedHabitants = value
 	while value < habitantsList.size():
+		habitantsList[-1].house = null
 		habitantsList.pop_back()
