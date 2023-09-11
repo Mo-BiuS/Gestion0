@@ -8,3 +8,7 @@ func _ready():
 	woodCost = 30
 	workCost = 10
 	description= "Small colonist house"
+	
+	canHaveInhabitants = true
+	maxHabitants = 2
+	allowedHabitants = 0

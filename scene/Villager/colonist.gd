@@ -19,6 +19,8 @@ var nextCasePos:Vector2
 var pathTo:Array[Vector2i] = []
 var buildTime:float = 0
 
+var house:Building = null
+
 signal roadConstructedAt(pos:Vector2i)
 signal roadDeletedAt(pos:Vector2i)
 signal buildingConstructedAt(pos:Vector2i)
@@ -43,7 +45,8 @@ func _process(delta):
 				pathTo.pop_front()
 				if pathTo.is_empty():
 					state = stateAfterMoving
-					buildingProgress.show()
+					if(state != s.IDLE):
+						buildingProgress.show()
 				else: nextCasePos = pathTo[0]*32+Vector2i(16,16)
 		s.BUILDING_ROAD:
 			buildTime-=delta

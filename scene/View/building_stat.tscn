@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://du552fcmtcctl"]
+[gd_scene load_steps=4 format=3 uid="uid://du552fcmtcctl"]
 
 [ext_resource type="StyleBox" uid="uid://dywpqe13q5hdc" path="res://scene/View/hud.tres" id="1_r4tix"]
 [ext_resource type="Script" path="res://scene/View/building_stat.gd" id="2_vasth"]
+[ext_resource type="FontFile" uid="uid://4nma6akxgyya" path="res://ressources/Font/FSEX300.ttf" id="3_5ipel"]
 
 [node name="BuildingStat" type="PanelContainer"]
 visible = false
@@ -27,3 +28,47 @@ theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NamePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/NamePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Name" type="Label" parent="MarginContainer/VBoxContainer/NamePanel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_5ipel")
+horizontal_alignment = 1
+
+[node name="HousePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/HousePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HousePanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Resident" type="Label" parent="MarginContainer/VBoxContainer/HousePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_5ipel")
+text = "Residents : 0/0"
+
+[node name="MaxHabitantSliders" type="HSlider" parent="MarginContainer/VBoxContainer/HousePanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+max_value = 2.0
+
+[connection signal="drag_ended" from="MarginContainer/VBoxContainer/HousePanel/MarginContainer/VBoxContainer/MaxHabitantSliders" to="." method="_on_max_habitant_sliders_drag_ended"]

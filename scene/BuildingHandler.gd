@@ -141,3 +141,10 @@ func getBuildingAt(pos:Vector2i)->Building:
 		if b is Building && Vector2i(b.getPos()) == pos:
 			return b
 	return null
+
+func getFreeHome()->Array[Building]:
+	var rep:Array[Building] = []
+	for i in buildingList.get_children():
+		if i is Building && i.canHaveInhabitants && i.habitantsList.size() < i.allowedHabitants:
+			rep.push_back(i)
+	return rep

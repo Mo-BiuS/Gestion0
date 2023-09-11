@@ -23,6 +23,9 @@ func _process(delta):
 	assignBuildingWork(idleColonist)
 	assignDeletingRoadWork(idleColonist)
 	assignDeletingBuildingWork(idleColonist)
+	idleReturnHome(idleColonist)
+	
+	assignHomeToHomeless()
 
 
 func assignRoadWork(idleColonist:Array[Colonist])->void:
@@ -144,6 +147,10 @@ func buildingDeletedAt(pos:Vector2i):
 	var b:Building = buildingHandler.buildingDeletedAt(pos)
 	ongoingDeleteBuildingWork.erase(b)
 	cursor.refreshPointerPos()
+	if b.canHaveInhabitants && b.habitantsList.size() > 0:
+		for i in b.habitantsList:
+			i.house = null
+			b.habitantsList.erase(i)
 
 func cancelRoadAt(pos:Vector2i):
 	if ongoingRoadWork.has(pos):
@@ -197,3 +204,24 @@ func cancelDeleteRoadAt(pos:Vector2i)->void:
 				v.state = v.s.IDLE
 				v.buildingProgress.hide()
 				v.stop()
+
+func idleReturnHome(idleColonist:Array[Colonist])->void:
+	if(!idleColonist.is_empty()):
+		for i in idleColonist:
+			if i.house != null && Vector2i(i.position/32) != Vector2i(i.house.getPos()):
+				i.pathTo = terrain.pathfindTo(i.position/32, i.house.getPos())
+				i.state = i.s.MOVING
+				i.stateAfterMoving = i.s.IDLE
+func assignHomeToHomeless()->void:
+	var homelessList:Array[Colonist]=[]
+	for i in villagerList.get_children():
+		if (i is Colonist && i.house == null):
+				homelessList.push_back(i)
+	if !homelessList.is_empty():
+		var freeHome:Array[Building] = buildingHandler.getFreeHome()
+		for building in freeHome:
+			var path:Array[Vector2i] = terrain.pathfindTo(homelessList[0].position/32, building.getPos())
+			if !path.is_empty():
+				building.habitantsList.push_back(homelessList[0])
+				homelessList[0].house = building
+				homelessList.pop_front()

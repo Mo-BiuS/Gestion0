@@ -1506,6 +1506,9 @@ position = Vector2(656, 432)
 [node name="ColonistHouse2" parent="BuildingHandler/BuildingList" instance=ExtResource("17_kugjs")]
 position = Vector2(592, 432)
 
+[node name="ColonistHouse3" parent="BuildingHandler/BuildingList" instance=ExtResource("17_kugjs")]
+position = Vector2(400, 560)
+
 [node name="SmallPort" parent="BuildingHandler/BuildingList" instance=ExtResource("15_feff2")]
 y_sort_enabled = true
 position = Vector2(624, 464)

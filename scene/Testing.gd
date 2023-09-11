@@ -86,9 +86,13 @@ func _process(delta):
 				cursor.finishDeleting()
 				buildingHandler.setDeleting(cursor.deletingArray)
 		State.SHOW_BUILDING_STAT:
-			if(!inMenu && (Input.is_action_just_pressed("validate") || Input.is_action_just_pressed("cancel") )):
+			if(!inMenu && Input.is_action_just_pressed("cancel")):
 				state = State.IDLE
 				hud.hideBuilding()
+			elif(!inMenu && Input.is_action_just_pressed("validate")):
+				var selectBuilding:Building = buildingHandler.getBuildingAt(Vector2i(mousePos/32))
+				if selectBuilding != null:
+					hud.showBuilding(selectBuilding)
 			
 func canAfford(b)->bool:
 	return b.goldCost <= gold && b.woodCost <= wood
