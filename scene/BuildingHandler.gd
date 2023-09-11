@@ -136,3 +136,8 @@ func refreshDelete()->void:
 	deleteQueue.set_cells_terrain_connect(0,pos,0,0)
 	deleteQueue.set_cells_terrain_connect(0,roadToDelete,0,0)
 
+func getBuildingAt(pos:Vector2i)->Building:
+	for b in buildingList.get_children():
+		if b is Building && Vector2i(b.getPos()) == pos:
+			return b
+	return null

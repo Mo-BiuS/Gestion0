@@ -3,9 +3,10 @@ extends Node2D
 @onready var camera:Camera2D = $Camera
 @onready var cursor:Node2D = $Cursor
 @onready var hud:CanvasLayer = $HUD
-@onready var buildingHanlder:BuildingHandler=$BuildingHandler
+@onready var buildingHandler:BuildingHandler=$BuildingHandler
+@onready var villagerHandler:VillagerHandler=$VillagerHandler
 
-enum State { IDLE, PLACING_BUILDING, PLACING_ROAD_0, PLACING_ROAD_1, DELETE_0, DELETE_1 }
+enum State { IDLE, PLACING_BUILDING, PLACING_ROAD_0, PLACING_ROAD_1, DELETE_0, DELETE_1, SHOW_BUILDING_STAT }
 var state:State = State.IDLE
 
 var buildingId:int = -1
@@ -22,12 +23,16 @@ func _process(delta):
 	var mousePos:Vector2i = get_local_mouse_position()
 	for i in hud.getMenuArea():
 		inMenu = inMenu || i.has_point(Vector2i(mousePos*camera.zoom.x)+(Vector2i(get_viewport_transform().origin)))
-	#print(inMenu)
+	
+	hud.refreshColonist(villagerHandler.getIdleColonist().size(), villagerHandler.getColonist().size())
 	
 	match state:
 		State.IDLE:
 			if(Input.is_action_just_pressed("validate") && !inMenu):
-				print("select building")
+				var selectBuilding:Building = buildingHandler.getBuildingAt(Vector2i(mousePos/32))
+				if selectBuilding != null:
+					hud.showBuilding(selectBuilding)
+					state = State.SHOW_BUILDING_STAT
 		State.PLACING_BUILDING:
 			var b = cursor.getBuilding()
 			cursor.setCanAfford(canAfford(b))
@@ -37,8 +42,8 @@ func _process(delta):
 				state = State.IDLE
 				buildingId = -1
 			elif(Input.is_action_just_pressed("validate") && !inMenu):
-				if canAfford(b) && cursor.isPositionValid() && buildingHanlder.freeSpaceAt(Vector2i(b.position/32)):
-					buildingHanlder.addBuildingToQueue(buildingId, b)
+				if canAfford(b) && cursor.isPositionValid() && buildingHandler.freeSpaceAt(Vector2i(b.position/32)):
+					buildingHandler.addBuildingToQueue(buildingId, b)
 					reduceCost(b)
 				cursor.setBuilding(-1)
 				hud.deselectBuilding()
@@ -60,7 +65,7 @@ func _process(delta):
 				cursor.stopPlacingRoad()
 			elif(Input.is_action_just_released("validate") && !inMenu):
 				state = State.PLACING_ROAD_0
-				if(cursor.isRoadValid):gold = buildingHanlder.addRoad(cursor.roadArray, gold)
+				if(cursor.isRoadValid):gold = buildingHandler.addRoad(cursor.roadArray, gold)
 				cursor.finishPlacingRoad()
 		State.DELETE_0:
 			if(Input.is_action_just_pressed("cancel")):
@@ -79,8 +84,12 @@ func _process(delta):
 			elif(Input.is_action_just_released("validate") && !inMenu):
 				state = State.DELETE_0
 				cursor.finishDeleting()
-				buildingHanlder.setDeleting(cursor.deletingArray)
-
+				buildingHandler.setDeleting(cursor.deletingArray)
+		State.SHOW_BUILDING_STAT:
+			if(!inMenu && (Input.is_action_just_pressed("validate") || Input.is_action_just_pressed("cancel") )):
+				state = State.IDLE
+				hud.hideBuilding()
+			
 func canAfford(b)->bool:
 	return b.goldCost <= gold && b.woodCost <= wood
 

@@ -173,6 +173,12 @@ func getIdleColonist()->Array[Colonist]:
 	rep.shuffle()
 	return rep
 
+func getColonist()->Array[Colonist]:
+	var rep:Array[Colonist] = []
+	for i in villagerList.get_children():
+		if i is Colonist:rep.push_back(i)
+	return rep
+
 func cancelDeleteBuildingAt(building:Building)->void:
 	if ongoingDeleteBuildingWork.has(building):
 		ongoingDeleteBuildingWork.erase(building)

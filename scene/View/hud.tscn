@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dayivtyfadp3t"]
+[gd_scene load_steps=10 format=3 uid="uid://dayivtyfadp3t"]
 
 [ext_resource type="FontFile" uid="uid://4nma6akxgyya" path="res://ressources/Font/FSEX300.ttf" id="1_gvsm5"]
 [ext_resource type="Script" path="res://scene/View/hud.gd" id="1_xmps3"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://df0x4k6t1rsy1" path="res://ressources/Icon/delete.png" id="4_a1jk3"]
 [ext_resource type="Texture2D" uid="uid://dhv6mi0hwf5qa" path="res://ressources/Icon/woodStorageIcon.png" id="5_n6c0i"]
 [ext_resource type="Texture2D" uid="uid://r0jxfrl5olp5" path="res://ressources/Icon/smallPortIcon.png" id="7_ib0uj"]
+[ext_resource type="PackedScene" uid="uid://du552fcmtcctl" path="res://scene/View/building_stat.tscn" id="9_x8mws"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_xmps3")
@@ -27,6 +28,23 @@ theme_override_constants/margin_bottom = 4
 [node name="HBoxContainer" type="HBoxContainer" parent="RessourceBar/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
+
+[node name="PanelContainer3" type="PanelContainer" parent="RessourceBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="RessourceBar/MarginContainer/HBoxContainer/PanelContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ColonistLabel" type="Label" parent="RessourceBar/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_gvsm5")
+text = "Colonist : 0/0"
+horizontal_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="RessourceBar/MarginContainer/HBoxContainer"]
 layout_mode = 2
@@ -195,6 +213,8 @@ focus_mode = 0
 toggle_mode = true
 icon = ExtResource("7_ib0uj")
 icon_alignment = 1
+
+[node name="BuildingStat" parent="." instance=ExtResource("9_x8mws")]
 
 [connection signal="toggled" from="VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/deconstruct" to="." method="_on_deconstruct_toggled"]
 [connection signal="toggled" from="VBoxContainer/BuildingBar/MarginContainer/HBoxContainer/path" to="." method="_on_path_toggled"]

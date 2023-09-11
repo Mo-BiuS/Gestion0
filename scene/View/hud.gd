@@ -8,6 +8,7 @@ extends CanvasLayer
 
 @onready var goldSum:Label = $RessourceBar/MarginContainer/HBoxContainer/PanelContainer/MarginContainer/GoldLabel
 @onready var woodSum:Label = $RessourceBar/MarginContainer/HBoxContainer/PanelContainer2/MarginContainer/WoodLabel
+@onready var colonist:Label = $RessourceBar/MarginContainer/HBoxContainer/PanelContainer3/MarginContainer/ColonistLabel
 
 @onready var goldCost:Label = $VBoxContainer/infoBar/MarginContainer/VBoxContainer/Prices/MarginContainer/HBoxContainer/GoldCost
 @onready var woodCost:Label = $VBoxContainer/infoBar/MarginContainer/VBoxContainer/Prices/MarginContainer/HBoxContainer/WoodCost
@@ -19,15 +20,20 @@ extends CanvasLayer
 @onready var buildingBar:PanelContainer = $VBoxContainer/BuildingBar
 @onready var lowerMenu:VBoxContainer = $VBoxContainer
 
+@onready var buildingStat = $BuildingStat
 
 signal buidldingSelected(toogled:bool, id:int)
 
 func getMenuArea()->Array[Rect2i]:
 	var menuArea:Array[Rect2i]
-	menuArea.push_back(Rect2i(ressourceBar.position, ressourceBar.size))
-	menuArea.push_back(Rect2i(infoBar.position+lowerMenu.position, infoBar.size))
-	menuArea.push_back(Rect2i(buildingBar.position+lowerMenu.position, buildingBar.size))
+	if(ressourceBar.is_visible_in_tree()):menuArea.push_back(Rect2i(ressourceBar.position, ressourceBar.size))
+	if(infoBar.is_visible_in_tree()):menuArea.push_back(Rect2i(infoBar.position+lowerMenu.position, infoBar.size))
+	if(buildingBar.is_visible_in_tree()):menuArea.push_back(Rect2i(buildingBar.position+lowerMenu.position, buildingBar.size))
+	if(buildingStat.is_visible_in_tree()):menuArea.push_back(Rect2i(buildingStat.position, buildingStat.size))
 	return menuArea
+
+func refreshColonist(idle:int, total:int):
+	colonist.text = "Colonist : "+str(idle)+"/"+str(total)
 
 func deselectBuilding()->void:
 	colonistPath.button_pressed = false
@@ -115,3 +121,11 @@ func _on_deconstruct_toggled(button_pressed):
 		colonistHouse.button_pressed = false
 		colonistStorage.button_pressed = false
 		smallPort.button_pressed = false
+
+func showBuilding(b:Building)->void:
+	buildingBar.hide()
+	buildingStat.show()
+	buildingStat.setData(b)
+func hideBuilding()->void:
+	buildingBar.show()
+	buildingStat.hide()
