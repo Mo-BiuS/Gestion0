@@ -10,12 +10,15 @@ extends PanelContainer
 @onready var maxWorkerSlider:HSlider = $MarginContainer/VBoxContainer/WorkPanel/MarginContainer/VBoxContainer/MaxWorker
 @onready var workerLabel:Label = $MarginContainer/VBoxContainer/WorkPanel/MarginContainer/VBoxContainer/Worker
 
+@onready var ressourcePanel = $MarginContainer/VBoxContainer/RessourcePanel
+@onready var woodLabel:Label = $MarginContainer/VBoxContainer/RessourcePanel/MarginContainer/VBoxContainer/Wood
 
 var building:Building = null
 
 func _process(delta):
 	if housePanel.is_visible_in_tree():refreshResidentLabel()
 	if workPanel.is_visible_in_tree():refreshWorkerLabel()
+	if ressourcePanel.is_visible_in_tree():refreshRessourceLabel()
 
 func setData(b:Building)->void:
 	building = b
@@ -41,6 +44,12 @@ func setData(b:Building)->void:
 		refreshResidentLabel()
 	else:
 		workPanel.hide()
+	
+	if building.maxWoodStorage > 0:
+		woodLabel.show()
+		refreshRessourceLabel()
+	else:
+		woodLabel.hide()
 
 func refreshResidentLabel()->void:
 	residentLabel.text = "Residents : "+str(building.habitantsList.size())+"/"+str(building.allowedHabitants)
@@ -53,3 +62,6 @@ func refreshWorkerLabel()->void:
 func _on_max_worker_drag_ended(value_changed):
 		building.setAllowedWorkers(maxWorkerSlider.value)
 		refreshWorkerLabel()
+
+func refreshRessourceLabel()->void:
+	woodLabel.text = "Wood : "+str(building.storedWood)+"/"+str(building.maxWoodStorage)

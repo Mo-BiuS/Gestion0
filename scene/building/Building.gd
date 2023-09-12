@@ -23,6 +23,11 @@ var workersList:Array[Colonist] = []
 
 var workerTiedToBuilding = false
 
+var woodJob = false
+var storedWood = 0
+var maxWoodStorage = 0
+const WOOD_TIME = 5.0
+
 func setShadow(v:int)->void:
 	match v:
 		0: self.modulate = Color(1,1,1,1)
@@ -45,3 +50,20 @@ func setAllowedWorkers(value:int)->void:
 	while value < workersList.size():
 		workersList[-1].workplace = null
 		workersList.pop_back()
+func addWood()->void:
+	if(storedWood + 5 <= maxWoodStorage):
+		storedWood+=5
+func giveWork(terrain:Terrain, i:Colonist)->bool:
+	var rep = false
+	if (woodJob) : rep = giveWoodWork(terrain, i)
+	return rep
+func giveWoodWork(terrain:Terrain, i:Colonist)->bool:
+	if(storedWood < maxWoodStorage):
+		var housePos:Vector2i = self.position/32
+		var closestForest:Vector2i = terrain.getClosestForestInArea(housePos, range)
+		if(closestForest != null):
+			var path:Array[Vector2i] = terrain.pathfindTo(Vector2i(i.position/32), closestForest)
+			i.goGetWoodAt(path,WOOD_TIME)
+			return true
+		else : return false
+	else : return false

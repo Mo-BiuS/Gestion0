@@ -40,7 +40,7 @@ func setSelection(a:Array[Vector2i], red:bool=false)->void:
 	self.clear_layer(3)
 	self.set_cells_terrain_connect(3,a,4,0)
 
-func selectAtArray(pos:Vector2i,size:float):
+func selectAtArray(pos:Vector2i,size:float)->Array[Vector2i]:
 	var pathIn:Dictionary
 	pathIn[pos] = 0
 	if size > 1 :
@@ -60,8 +60,11 @@ func selectAtArray(pos:Vector2i,size:float):
 			valueLeft.erase(cost)
 			if !valueLeft.is_empty():cost = valueLeft.min()
 			else: cost = size
-	return pathIn.keys()
-	
+	var rep:Array[Vector2i] = []
+	for i in pathIn.keys():
+		if i is Vector2i: rep.push_back(i)
+	return rep
+
 func unique_array(array: Array[Vector2i]) -> Array[Vector2i]:
 	var unique: Array[Vector2i] = []
 	for item in array:
@@ -137,3 +140,15 @@ func inForest(pos:Vector2i)->bool:
 
 func roadAt(pos:Vector2i)->bool:
 	return self.get_cell_source_id(2,pos) == 100
+
+func getClosestForestInArea(housePos:Vector2i, range:int):
+	var areaExplored:Array[Vector2i] = selectAtArray(housePos,range)
+	var closest = null
+	for i in areaExplored:
+		if inForest(i):
+			if closest == null: closest = i
+			elif Vector2(housePos).direction_to(Vector2(closest)) < Vector2(housePos).direction_to(Vector2(i)):
+				closest = i
+	#self.clear_layer(4)
+	#self.set_cells_terrain_connect(4,[closest],4,0)
+	return closest

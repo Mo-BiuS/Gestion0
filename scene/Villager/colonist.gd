@@ -3,7 +3,7 @@ class_name Colonist extends AnimatedSprite2D
 @onready var terrain = $"../../../Terrain"
 @onready var buildingProgress:ProgressBar = $ProgressBar
 
-enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD, BUILDING_BUILDING, DELETING_ROAD, DELETING_BUILDING }
+enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD, BUILDING_BUILDING, DELETING_ROAD, DELETING_BUILDING, COLLECTING_WOOD, DEPOSING_WOOD }
 var state = s.IDLE
 var stateAfterMoving = s.IDLE
 
@@ -17,6 +17,7 @@ var speedModifier = 1.0
 var odlPos:Vector2i = Vector2i(position/32)
 var nextCasePos:Vector2
 var pathTo:Array[Vector2i] = []
+var pathToReturnHome:Array[Vector2i] = []
 var buildTime:float = 0
 
 var house:Building = null
@@ -83,6 +84,24 @@ func _process(delta):
 				stateAfterMoving = s.IDLE
 				buildingProgress.hide()
 				buildingDeletedAt.emit(Vector2i(position/32))
+		s.COLLECTING_WOOD:
+			buildTime-=delta
+			buildingProgress.value+=delta
+			if buildTime <= 0:
+				if workplace != null:
+					stateAfterMoving = s.DEPOSING_WOOD
+					state = s.MOVING
+					buildingProgress.hide()
+					pathTo = terrain.pathfindTo(Vector2i(position/32), Vector2i(workplace.position/32))
+				else:
+					stateAfterMoving = s.IDLE
+					state = s.IDLE
+		s.DEPOSING_WOOD:
+			buildingProgress.hide()
+			if workplace != null:
+				workplace.addWood()
+			stateAfterMoving = s.IDLE
+			state = s.IDLE
 
 
 func idleMovement(delta:float)->void:
@@ -144,3 +163,10 @@ func caseMovement(delta:float)->bool:
 				if(abs(direction.x) < abs(direction.y)): play("south")
 				else: play("east")
 		return false
+func goGetWoodAt(pathTo:Array[Vector2i], collectTime:float):
+	self.pathTo = pathTo
+	self.buildTime = collectTime
+	buildingProgress.max_value = buildTime
+	buildingProgress.value = 0
+	state = s.MOVING
+	stateAfterMoving = s.COLLECTING_WOOD

@@ -21,6 +21,7 @@ func _process(delta):
 	assignWorkplaceToColonist()
 	
 	var idleColonist:Array[Colonist] = getIdleColonist()
+	assignWorkplaceWork(idleColonist)
 	assignRoadWork(idleColonist)
 	assignBuildingWork(idleColonist)
 	assignDeletingBuildingWork(idleColonist)
@@ -147,11 +148,12 @@ func buildingConstructedAt(pos:Vector2i):
 	ongoingBuildingWork.erase(pos)
 func buildingDeletedAt(pos:Vector2i):
 	var b:Building = buildingHandler.buildingDeletedAt(pos)
-	if b.canHaveInhabitants && b.habitantsList.size() > 0:
-		for i in b.habitantsList:
-			i.house = null
-			b.habitantsList.erase(i)
-	ongoingDeleteBuildingWork.erase(b)
+	if b != null:
+		if b.canHaveInhabitants && b.habitantsList.size() > 0:
+			for i in b.habitantsList:
+				i.house = null
+				b.habitantsList.erase(i)
+		ongoingDeleteBuildingWork.erase(b)
 	cursor.refreshPointerPos()
 
 func cancelRoadAt(pos:Vector2i):
@@ -245,3 +247,7 @@ func assignWorkplaceToColonist()->void:
 					joblessList[0].workplace = building
 					joblessList.pop_front()
 	
+func assignWorkplaceWork(idleColonist:Array[Colonist])->void:
+	for i in idleColonist:
+		if i.workplace != null:
+			if(i.workplace.giveWork(terrain, i)):idleColonist.erase(i)
