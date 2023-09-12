@@ -18,6 +18,8 @@ func _ready():
 		c.buildingDeletedAt.connect(buildingDeletedAt)
 
 func _process(delta):
+	assignWorkplaceToColonist()
+	
 	var idleColonist:Array[Colonist] = getIdleColonist()
 	assignRoadWork(idleColonist)
 	assignBuildingWork(idleColonist)
@@ -212,6 +214,8 @@ func idleReturnHome(idleColonist:Array[Colonist])->void:
 				i.pathTo = terrain.pathfindTo(i.position/32, i.house.getPos())
 				i.state = i.s.MOVING
 				i.stateAfterMoving = i.s.IDLE
+				idleColonist.erase(i)
+
 func assignHomeToHomeless()->void:
 	var homelessList:Array[Colonist]=[]
 	for i in villagerList.get_children():
@@ -226,3 +230,18 @@ func assignHomeToHomeless()->void:
 					building.habitantsList.push_back(homelessList[0])
 					homelessList[0].house = building
 					homelessList.pop_front()
+func assignWorkplaceToColonist()->void:
+	var joblessList:Array[Colonist]
+	for i in villagerList.get_children():
+		if (i is Colonist && i.workplace == null):
+				joblessList.push_back(i)
+	if(!joblessList.is_empty()):
+		var buildingWithJob:Array[Building] = buildingHandler.getBuildingWithJob()
+		for building in buildingWithJob:
+			if !joblessList.is_empty():
+				var path:Array[Vector2i] = terrain.pathfindTo(joblessList[0].position/32, building.getPos())
+				if(!path.is_empty() && (!building.workerTiedToBuilding || (building.workerTiedToBuilding && building.habitantsList.has(joblessList[0])))):
+					building.workersList.push_back(joblessList[0])
+					joblessList[0].workplace = building
+					joblessList.pop_front()
+	

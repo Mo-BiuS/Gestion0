@@ -20,6 +20,7 @@ var pathTo:Array[Vector2i] = []
 var buildTime:float = 0
 
 var house:Building = null
+var workplace:Building = null
 
 signal roadConstructedAt(pos:Vector2i)
 signal roadDeletedAt(pos:Vector2i)

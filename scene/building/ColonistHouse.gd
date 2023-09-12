@@ -12,3 +12,9 @@ func _ready():
 	canHaveInhabitants = true
 	maxHabitants = 2
 	allowedHabitants = 0
+	
+	canHaveWorkers = true
+	maxWorkers = maxHabitants
+	allowedWorkers = 0
+	
+	workerTiedToBuilding = true

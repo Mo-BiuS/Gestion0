@@ -16,6 +16,13 @@ var maxHabitants:int = 0
 var allowedHabitants:int = 0
 var habitantsList:Array[Colonist] = []
 
+var canHaveWorkers:bool = false
+var maxWorkers:int = 0
+var allowedWorkers:int = 0
+var workersList:Array[Colonist] = []
+
+var workerTiedToBuilding = false
+
 func setShadow(v:int)->void:
 	match v:
 		0: self.modulate = Color(1,1,1,1)
@@ -28,5 +35,13 @@ func getPos()->Vector2:
 func setAllowedHabitants(value:int)->void:
 	allowedHabitants = value
 	while value < habitantsList.size():
+		if workerTiedToBuilding:
+			workersList.erase(habitantsList[-1])
+			habitantsList[-1].workplace = null
 		habitantsList[-1].house = null
 		habitantsList.pop_back()
+func setAllowedWorkers(value:int)->void:
+	allowedWorkers = value
+	while value < workersList.size():
+		workersList[-1].workplace = null
+		workersList.pop_back()

@@ -69,6 +69,27 @@ text = "Residents : 0/0"
 
 [node name="MaxHabitantSliders" type="HSlider" parent="MarginContainer/VBoxContainer/HousePanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-max_value = 2.0
+
+[node name="WorkPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/WorkPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/WorkPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Worker" type="Label" parent="MarginContainer/VBoxContainer/WorkPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_5ipel")
+text = "Residents : 0/0"
+
+[node name="MaxWorker" type="HSlider" parent="MarginContainer/VBoxContainer/WorkPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
 
 [connection signal="drag_ended" from="MarginContainer/VBoxContainer/HousePanel/MarginContainer/VBoxContainer/MaxHabitantSliders" to="." method="_on_max_habitant_sliders_drag_ended"]
+[connection signal="drag_ended" from="MarginContainer/VBoxContainer/WorkPanel/MarginContainer/VBoxContainer/MaxWorker" to="." method="_on_max_worker_drag_ended"]

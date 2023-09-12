@@ -151,3 +151,10 @@ func getFreeHome()->Array[Building]:
 		if i is Building && i.canHaveInhabitants && i.habitantsList.size() < i.allowedHabitants:
 			rep.push_back(i)
 	return rep
+
+func getBuildingWithJob()->Array[Building]:
+	var rep:Array[Building] = []
+	for i in buildingList.get_children():
+		if i is Building && i.canHaveWorkers && i.workersList.size() < i.allowedWorkers:
+			rep.push_back(i)
+	return rep
