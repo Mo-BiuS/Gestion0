@@ -147,7 +147,7 @@ func getClosestForestInArea(housePos:Vector2i, range:int):
 	for i in areaExplored:
 		if inForest(i):
 			if closest == null: closest = i
-			elif Vector2(housePos).direction_to(Vector2(closest)) < Vector2(housePos).direction_to(Vector2(i)):
+			elif Vector2(housePos).distance_to(Vector2(closest)) > Vector2(housePos).distance_to(Vector2(i)):
 				closest = i
 	#self.clear_layer(4)
 	#self.set_cells_terrain_connect(4,[closest],4,0)
