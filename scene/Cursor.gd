@@ -23,6 +23,11 @@ var deletingStart:Vector2i
 var deletingEnd:Vector2i
 var deletingArray:Array[Vector2i]
 
+
+var isBuildingSelected:bool = false
+var buildingPos:Vector2i
+var buildingArea:int
+
 func _process(delta):
 	var nMousePos:Vector2i =  Vector2i(get_global_mouse_position())/32
 	if(mousePosition != nMousePos):
@@ -41,7 +46,11 @@ func getBuilding():
 	return building
 func refreshPointerPos()->void: 
 	mousePosition = (get_global_mouse_position())/32
-	if(buildingId == -1):terrain.selectAt(mousePosition,selectSize)
+	if(buildingId == -1):
+		if isBuildingSelected:
+			terrain.selectAt(buildingPos,buildingArea)
+		else:
+			terrain.selectAt(mousePosition,selectSize)
 	elif(buildingId == 0):
 		handleRoadShadow()
 	elif (buildingId == 100):
@@ -158,3 +167,12 @@ func setBuilding(id:int)->void:
 			building.setShadow(1)
 			add_child(building)
 			terrain.deselect()
+
+func showBuilding(b:Building)->void:
+	isBuildingSelected = true
+	buildingPos = Vector2i(b.getPos())
+	buildingArea = b.range
+	refreshPointerPos()
+func hideBuilding()->void:
+	isBuildingSelected = false
+	refreshPointerPos()

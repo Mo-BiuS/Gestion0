@@ -32,6 +32,7 @@ func _process(delta):
 				var selectBuilding:Building = buildingHandler.getBuildingAt(Vector2i(mousePos/32))
 				if selectBuilding != null:
 					hud.showBuilding(selectBuilding)
+					cursor.showBuilding(selectBuilding)
 					state = State.SHOW_BUILDING_STAT
 		State.PLACING_BUILDING:
 			var b = cursor.getBuilding()
@@ -89,10 +90,16 @@ func _process(delta):
 			if(!inMenu && Input.is_action_just_pressed("cancel")):
 				state = State.IDLE
 				hud.hideBuilding()
+				cursor.hideBuilding()
 			elif(!inMenu && Input.is_action_just_pressed("validate")):
 				var selectBuilding:Building = buildingHandler.getBuildingAt(Vector2i(mousePos/32))
 				if selectBuilding != null:
 					hud.showBuilding(selectBuilding)
+					cursor.showBuilding(selectBuilding)
+				else:
+					state = State.IDLE
+					hud.hideBuilding()
+					cursor.hideBuilding()
 			
 func canAfford(b)->bool:
 	return b.goldCost <= gold && b.woodCost <= wood

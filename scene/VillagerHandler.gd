@@ -21,8 +21,8 @@ func _process(delta):
 	var idleColonist:Array[Colonist] = getIdleColonist()
 	assignRoadWork(idleColonist)
 	assignBuildingWork(idleColonist)
-	assignDeletingRoadWork(idleColonist)
 	assignDeletingBuildingWork(idleColonist)
+	assignDeletingRoadWork(idleColonist)
 	idleReturnHome(idleColonist)
 	
 	assignHomeToHomeless()
@@ -145,12 +145,12 @@ func buildingConstructedAt(pos:Vector2i):
 	ongoingBuildingWork.erase(pos)
 func buildingDeletedAt(pos:Vector2i):
 	var b:Building = buildingHandler.buildingDeletedAt(pos)
-	ongoingDeleteBuildingWork.erase(b)
-	cursor.refreshPointerPos()
 	if b.canHaveInhabitants && b.habitantsList.size() > 0:
 		for i in b.habitantsList:
 			i.house = null
 			b.habitantsList.erase(i)
+	ongoingDeleteBuildingWork.erase(b)
+	cursor.refreshPointerPos()
 
 func cancelRoadAt(pos:Vector2i):
 	if ongoingRoadWork.has(pos):

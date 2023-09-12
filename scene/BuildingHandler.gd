@@ -116,15 +116,18 @@ func getDeletingBuildingWork()->Array[Building]:
 
 func setDeleting(deleteAtPos:Array[Vector2i])->void:
 	for pos in deleteAtPos:
+		var buildingDeleted = false
 		for building in buildingList.get_children():
 			if(Vector2i(building.getPos()) == pos):
 				if(buildingToDelete.is_empty()):
 					buildingToDelete.push_back(building)
+					buildingDeleted = true
 				else:
 					for i in buildingToDelete:
 						if !Vector2i(i.getPos()) == pos:
 							buildingToDelete.push_back(building)
-		if(terrain.roadAt(pos) && !roadToDelete.has(pos)):
+							buildingDeleted = true
+		if(!buildingDeleted && terrain.roadAt(pos) && !roadToDelete.has(pos)):
 			roadToDelete.push_back(pos)
 	refreshDelete()
 
