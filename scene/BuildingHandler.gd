@@ -158,3 +158,10 @@ func getBuildingWithJob()->Array[Building]:
 		if i is Building && i.canHaveWorkers && i.workersList.size() < i.allowedWorkers:
 			rep.push_back(i)
 	return rep
+func getBuildingInArea(posList:Array[Vector2i])->Array[Building]:
+	var rep:Array[Building] = []
+	for pos in posList:
+		for building in buildingList.get_children():
+			if building is Building && Vector2i(building.getPos()) == pos:
+				rep.push_back(building)
+	return rep

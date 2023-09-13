@@ -12,3 +12,5 @@ func _ready():
 	canHaveWorkers = true
 	maxWorkers = 1
 	allowedWorkers = 0
+	
+	isStorage = true

@@ -15,6 +15,8 @@ func _ready():
 	canHaveWorkers = true
 	maxWorkers = 1
 	allowedWorkers = 0
+	
+	isStorage = true
 
 func setRotationFromTileId(n:int,s:int,e:int,w:int)->void:
 	if(n == 1 && s == 4):region_rect.position.x = 32

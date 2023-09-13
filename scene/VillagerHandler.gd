@@ -4,6 +4,7 @@ class_name VillagerHandler extends Node2D
 @onready var buildingHandler:BuildingHandler = $"../BuildingHandler"
 @onready var terrain:Terrain = $"../Terrain"
 @onready var cursor = $"../Cursor"
+@onready var testing = $".."
 
 var ongoingRoadWork:Array[Vector2i] = []
 var ongoingBuildingWork:Array[Vector2i] = []
@@ -16,6 +17,7 @@ func _ready():
 		c.buildingConstructedAt.connect(buildingConstructedAt)
 		c.roadDeletedAt.connect(roadDeletedAt)
 		c.buildingDeletedAt.connect(buildingDeletedAt)
+		c.storedWood.connect(storedWood)
 
 func _process(delta):
 	assignWorkplaceToColonist()
@@ -183,6 +185,13 @@ func getIdleColonist()->Array[Colonist]:
 			rep.push_back(i)
 	rep.shuffle()
 	return rep
+func getWorkingColonist()->Array[Colonist]:
+	var rep:Array[Colonist] = []
+	for i in villagerList.get_children():
+		if !(i.state == i.s.IDLE || i.state == i.s.MOVING_IDLE) :
+			rep.push_back(i)
+	rep.shuffle()
+	return rep
 
 func getColonist()->Array[Colonist]:
 	var rep:Array[Colonist] = []
@@ -251,3 +260,11 @@ func assignWorkplaceWork(idleColonist:Array[Colonist])->void:
 	for i in idleColonist:
 		if i.workplace != null:
 			if(i.workplace.giveWork(terrain, i)):idleColonist.erase(i)
+func villagerGettingRessourceFrom(b:Building)->bool:
+	for i in getWorkingColonist():
+		if i.isStateOrNextState(i.s.DEPOSING_WOOD_TO_STORAGE) && (Vector2i(i.nextCasePos/32) == Vector2i(b.getPos()) || Vector2i(i.pathTo[-1]/32) == Vector2i(b.getPos())):
+			return true
+	return false
+
+func storedWood(value:int):
+	testing.wood+=value

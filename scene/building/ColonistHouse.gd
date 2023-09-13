@@ -20,3 +20,5 @@ func _ready():
 	workerTiedToBuilding = true
 	woodJob = true
 	maxWoodStorage = 25
+	woodProductionPerWork = 1
+	woodProductionTimeNeeded = 5.0

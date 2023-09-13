@@ -1472,10 +1472,10 @@ position = Vector2(632, 440)
 position = Vector2(616, 440)
 
 [node name="Colonist3" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
-position = Vector2(632, 424)
+position = Vector2(616, 440)
 
 [node name="Colonist4" parent="VillagerHandler/VillagerList" instance=ExtResource("13_whk88")]
-position = Vector2(616, 424)
+position = Vector2(616, 440)
 
 [node name="BuildingHandler" type="Node2D" parent="."]
 y_sort_enabled = true

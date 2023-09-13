@@ -3,7 +3,7 @@ class_name Colonist extends AnimatedSprite2D
 @onready var terrain = $"../../../Terrain"
 @onready var buildingProgress:ProgressBar = $ProgressBar
 
-enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD, BUILDING_BUILDING, DELETING_ROAD, DELETING_BUILDING, COLLECTING_WOOD, DEPOSING_WOOD }
+enum s { IDLE , MOVING_IDLE, MOVING, BUILDING_ROAD, BUILDING_BUILDING, DELETING_ROAD, DELETING_BUILDING, COLLECTING_WOOD, DEPOSING_WOOD, GETTING_WOOD_FOR_STORAGE, DEPOSING_WOOD_TO_STORAGE }
 var state = s.IDLE
 var stateAfterMoving = s.IDLE
 
@@ -22,12 +22,16 @@ var buildTime:float = 0
 
 var house:Building = null
 var workplace:Building = null
+var destinationBuilding:Building = null
+
+var maxTransport = 5
+var transport = 0
 
 signal roadConstructedAt(pos:Vector2i)
 signal roadDeletedAt(pos:Vector2i)
 signal buildingConstructedAt(pos:Vector2i)
 signal buildingDeletedAt(pos:Vector2i)
-
+signal storedWood(value:int)
 
 func _ready():
 	var pos:Vector2i = Vector2i(position/32)
@@ -102,6 +106,24 @@ func _process(delta):
 				workplace.addWood()
 			stateAfterMoving = s.IDLE
 			state = s.IDLE
+		s.GETTING_WOOD_FOR_STORAGE:
+			if destinationBuilding != null:
+				var v:int = min(destinationBuilding.storedWood, self.maxTransport)
+				transport+=v
+				destinationBuilding.storedWood-=v
+				destinationBuilding = null
+			if workplace != null:
+				stateAfterMoving = s.DEPOSING_WOOD_TO_STORAGE
+				state = s.MOVING
+				pathTo = terrain.pathfindTo(Vector2i(position/32), Vector2i(workplace.position/32))
+			else:
+				stateAfterMoving = s.IDLE
+				state = s.IDLE
+		s.DEPOSING_WOOD_TO_STORAGE:
+			storedWood.emit(transport)
+			transport = 0
+			stateAfterMoving = s.IDLE
+			state = s.IDLE
 
 
 func idleMovement(delta:float)->void:
@@ -170,3 +192,10 @@ func goGetWoodAt(pathTo:Array[Vector2i], collectTime:float):
 	buildingProgress.value = 0
 	state = s.MOVING
 	stateAfterMoving = s.COLLECTING_WOOD
+func goMoveWoodAt(pathTo:Array[Vector2i], b:Building):
+	self.pathTo = pathTo
+	state = s.MOVING
+	stateAfterMoving = s.GETTING_WOOD_FOR_STORAGE
+	destinationBuilding = b
+func isStateOrNextState(state:s)->bool:
+	return self.state == state || self.stateAfterMoving == state
